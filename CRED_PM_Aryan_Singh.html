@@ -1,0 +1,1943 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CRED PM Case Study — Aryan Singh</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+
+/* ═══════════════════════════════════════════
+   RESET & BASE
+═══════════════════════════════════════════ */
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+:root {
+  --black:   #0a0a0a;
+  --surface: #0d0d0d;
+  --card:    #141414;
+  --card2:   #1a1a1a;
+  --border:  #252525;
+  --gold:    #c9a84c;
+  --gold2:   #e2c96a;
+  --cream:   #f5f0e8;
+  --muted:   rgba(245,240,232,0.45);
+  --muted2:  rgba(245,240,232,0.25);
+  --red:     #c94c4c;
+  --green:   #3a9e6a;
+  --blue:    #3a6ab5;
+  --purple:  #6a3ab5;
+
+  /* Wireframe palette */
+  --wf-bg: #1a1a1a;
+  --wf-card: #242424;
+  --wf-border: #333;
+  --wf-text: #e0e0e0;
+  --wf-muted: #888;
+  --wf-accent: #c9a84c;
+  --wf-green: #4a9e6a;
+  --wf-red: #9e4a4a;
+  --wf-blue: #4a6a9e;
+  --phone-border: #444;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--black);
+  color: var(--cream);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px;
+  line-height: 1.6;
+  padding-top: 52px;
+}
+
+img { max-width:100%; }
+a { color: var(--gold); }
+
+/* ═══════════════════════════════════════════
+   STICKY NAV
+═══════════════════════════════════════════ */
+.sticky-nav {
+  position: fixed; top:0; left:0; right:0; z-index:1000;
+  background: rgba(10,10,10,0.96);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(201,168,76,0.15);
+  padding: 0 48px;
+  height: 52px;
+  display: flex; align-items:center; justify-content:space-between;
+}
+.sn-logo { font-family:'DM Mono',monospace; font-size:11px; letter-spacing:0.22em; text-transform:uppercase; color:var(--gold); }
+.sn-links { display:flex; gap:32px; }
+.sn-link { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.12em; text-transform:uppercase; color:var(--muted); text-decoration:none; transition:color 0.2s; cursor:pointer; }
+.sn-link:hover { color:var(--gold); }
+
+/* ═══════════════════════════════════════════
+   COVER
+═══════════════════════════════════════════ */
+.cover {
+  min-height: 100vh;
+  background: var(--surface);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+.cover-top-bar { background:var(--gold); height:4px; width:100%; }
+.cover-inner { padding: 64px 64px 56px; flex:1; display:flex; flex-direction:column; }
+.cover-label { font-family:'DM Mono',monospace; font-size:11px; letter-spacing:0.28em; text-transform:uppercase; color:var(--gold); margin-bottom:80px; }
+.cover-eyebrow { font-family:'DM Mono',monospace; font-size:11px; letter-spacing:0.2em; text-transform:uppercase; color:var(--muted2); margin-bottom:16px; }
+.cover-title { font-family:'Playfair Display',serif; font-size:clamp(42px,6vw,76px); font-weight:900; line-height:1.0; letter-spacing:-0.02em; margin-bottom:16px; }
+.cover-title .gold { color:var(--gold); font-style:italic; }
+.cover-subtitle { font-family:'Playfair Display',serif; font-size:clamp(16px,2vw,22px); font-weight:400; font-style:italic; color:var(--muted); margin-bottom:56px; border-left:3px solid var(--gold); padding-left:18px; }
+
+.cover-meta-grid { display:grid; grid-template-columns:repeat(3,1fr); border-top:1px solid rgba(201,168,76,0.2); border-left:1px solid rgba(201,168,76,0.2); margin-bottom:56px; }
+.cover-meta-item { padding:18px 20px; border-right:1px solid rgba(201,168,76,0.2); border-bottom:1px solid rgba(201,168,76,0.2); }
+.meta-key { font-family:'DM Mono',monospace; font-size:9px; letter-spacing:0.16em; text-transform:uppercase; color:var(--muted); margin-bottom:5px; }
+.meta-val { font-size:13px; font-weight:600; color:var(--cream); }
+
+.cover-toc { margin-top:auto; }
+.toc-title { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.22em; text-transform:uppercase; color:var(--gold); margin-bottom:18px; }
+.toc-item { display:flex; align-items:baseline; gap:12px; margin-bottom:12px; font-size:13px; }
+.toc-num { font-family:'Playfair Display',serif; font-size:18px; font-weight:700; color:var(--gold); opacity:0.4; min-width:28px; }
+.toc-line { flex:1; border-bottom:1px dotted rgba(245,240,232,0.12); margin-bottom:3px; }
+.toc-text { color:rgba(245,240,232,0.75); }
+.toc-pg { font-family:'DM Mono',monospace; font-size:10px; color:var(--gold); }
+
+.cover-author { margin-top:40px; padding-top:24px; border-top:1px solid rgba(201,168,76,0.2); display:flex; align-items:center; gap:16px; }
+.author-avatar { width:46px; height:46px; border-radius:50%; background:linear-gradient(135deg,var(--gold),#7a5a10); display:flex; align-items:center; justify-content:center; font-family:'Playfair Display',serif; font-size:20px; font-weight:700; color:#0d0d0d; flex-shrink:0; }
+.author-name { font-family:'Playfair Display',serif; font-size:16px; font-weight:700; }
+.author-role { font-size:11px; color:var(--muted); margin-top:2px; }
+
+.cover-deco { position:absolute; top:60px; right:56px; font-family:'Playfair Display',serif; font-size:240px; font-weight:900; color:rgba(201,168,76,0.03); line-height:1; pointer-events:none; user-select:none; }
+
+/* ═══════════════════════════════════════════
+   PART DIVIDER
+═══════════════════════════════════════════ */
+.part-divider {
+  background: var(--surface);
+  padding: 100px 64px;
+  border-top: 1px solid rgba(201,168,76,0.1);
+}
+.pd-label { font-family:'DM Mono',monospace; font-size:11px; letter-spacing:0.28em; text-transform:uppercase; color:var(--gold); margin-bottom:20px; }
+.pd-num { font-family:'Playfair Display',serif; font-size:clamp(72px,12vw,120px); font-weight:900; color:rgba(201,168,76,0.08); line-height:0.85; margin-bottom:12px; }
+.pd-title { font-family:'Playfair Display',serif; font-size:clamp(28px,4vw,46px); font-weight:900; line-height:1.1; }
+.pd-title .gold { color:var(--gold); font-style:italic; }
+.pd-desc { font-size:15px; color:var(--muted); margin-top:18px; max-width:520px; line-height:1.7; }
+.pd-rule { width:64px; height:3px; background:var(--gold); margin:24px 0; }
+
+/* ═══════════════════════════════════════════
+   CONTENT SECTION WRAPPER
+═══════════════════════════════════════════ */
+.section-wrap {
+  padding: 0 64px 72px;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+/* Section header bar */
+.section-header-bar {
+  background: var(--surface);
+  padding: 28px 64px 24px;
+  margin: 0 0 40px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  border-bottom: 1px solid rgba(201,168,76,0.12);
+}
+.sh-label { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.2em; text-transform:uppercase; color:var(--gold); margin-bottom:5px; }
+.sh-title { font-family:'Playfair Display',serif; font-size:clamp(20px,3vw,28px); font-weight:900; line-height:1.1; }
+.sh-title .gold { color:var(--gold); font-style:italic; }
+.sh-right { font-family:'DM Mono',monospace; font-size:10px; color:var(--muted2); white-space:nowrap; text-align:right; }
+
+/* ═══════════════════════════════════════════
+   PERSONA BOX
+═══════════════════════════════════════════ */
+.persona-box { background:var(--card); border:1px solid rgba(201,168,76,0.15); border-radius:10px; padding:24px 28px; margin-bottom:28px; display:flex; gap:20px; align-items:center; }
+.pa-avatar { width:52px; height:52px; border-radius:50%; background:linear-gradient(135deg,var(--gold),#7a5a10); display:flex; align-items:center; justify-content:center; font-family:'Playfair Display',serif; font-size:22px; font-weight:700; color:#0d0d0d; flex-shrink:0; }
+.pa-name { font-family:'Playfair Display',serif; font-size:16px; font-weight:700; color:var(--gold); margin-bottom:4px; }
+.pa-desc { font-size:13px; color:var(--muted); line-height:1.5; }
+.pa-jtbd { font-size:13px; color:rgba(245,240,232,0.8); margin-top:6px; font-style:italic; }
+
+/* ═══════════════════════════════════════════
+   JOURNEY TABLE
+═══════════════════════════════════════════ */
+.journey-table-wrap { overflow-x:auto; margin-bottom:20px; }
+.jt { width:100%; min-width:800px; border-collapse:collapse; font-size:13px; line-height:1.45; table-layout:fixed; }
+.jt th { background:var(--surface); color:var(--gold); font-family:'DM Mono',monospace; font-size:11px; letter-spacing:0.08em; text-transform:uppercase; padding:10px 10px; text-align:left; border:1px solid #2a2a2a; word-break:break-word; }
+.jt th.stage-th { text-align:center; color:var(--cream); font-family:'DM Sans',sans-serif; font-size:12px; font-weight:600; width:14%; }
+.jt td { padding:10px 10px; border:1px solid #2a2a2a; vertical-align:top; word-break:break-word; width:14%; }
+.jt tr.row-actions td { background:#0f1a12; }
+.jt tr.row-thoughts td { background:#161208; }
+.jt tr.row-feelings td { background:#180e0e; }
+.jt tr.row-touch td { background:#0c1220; }
+.jt tr.row-pain td { background:#1a0f0f; }
+.jt tr.row-opp td { background:#0d1a10; }
+.row-label-cell { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.08em; text-transform:uppercase; background:var(--surface) !important; color:var(--gold) !important; padding:10px 10px !important; word-break:break-word; width:8% !important; min-width:60px; }
+
+.bullet-item { display:flex; gap:6px; margin-bottom:5px; align-items:flex-start; font-size:12px; }
+.bullet-dot { width:5px; height:5px; border-radius:50%; margin-top:5px; flex-shrink:0; }
+.dot-g { background:#3a9e6a; }
+.dot-r { background:#c94c4c; }
+.dot-b { background:#3a6ab5; }
+.dot-o { background:#c9a84c; }
+
+.tag-sm { display:inline-block; padding:2px 7px; border-radius:4px; font-size:11px; font-weight:600; letter-spacing:0.04em; text-transform:uppercase; margin:1px 2px 1px 0; font-family:'DM Mono',monospace; }
+.tg-pain { background:rgba(201,76,76,0.15); color:#e87a7a; border:1px solid rgba(201,76,76,0.25); }
+.tg-opp  { background:rgba(58,158,106,0.15); color:#7adda8; border:1px solid rgba(58,158,106,0.25); }
+.tg-touch{ background:rgba(58,106,181,0.15); color:#7aaae0; border:1px solid rgba(58,106,181,0.25); }
+.tg-neutral { background:rgba(201,168,76,0.12); color:#e2c96a; border:1px solid rgba(201,168,76,0.2); }
+.italic-quote { font-style:italic; font-size:13px; color:rgba(245,240,232,0.7); }
+
+/* ═══════════════════════════════════════════
+   EMPATHY MAP
+═══════════════════════════════════════════ */
+.empathy-grid { display:grid; grid-template-columns:1fr 1fr; gap:3px; background:var(--border); border-radius:10px; overflow:hidden; margin-bottom:24px; }
+.em-cell { background:var(--card); padding:24px 20px; position:relative; }
+.em-cell::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; }
+.em-think::before { background:var(--gold); }
+.em-feel::before  { background:var(--red); }
+.em-see::before   { background:var(--blue); }
+.em-hear::before  { background:var(--purple); }
+.em-label { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.15em; text-transform:uppercase; margin-bottom:14px; display:flex; align-items:center; gap:8px; color:var(--muted); }
+.em-icon { width:22px; height:22px; border-radius:5px; display:flex; align-items:center; justify-content:center; font-size:13px; }
+.em-item { display:flex; gap:9px; margin-bottom:10px; font-size:13px; line-height:1.5; align-items:flex-start; }
+.em-bullet { width:16px; height:16px; border-radius:50%; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:8px; font-weight:700; font-family:'DM Mono',monospace; margin-top:1px; }
+.b-g { background:rgba(58,158,106,0.2); color:#7adda8; border:1px solid rgba(58,158,106,0.3); }
+.b-r { background:rgba(201,76,76,0.2); color:#e87a7a; border:1px solid rgba(201,76,76,0.3); }
+.b-b { background:rgba(58,106,181,0.2); color:#7aaae0; border:1px solid rgba(58,106,181,0.3); }
+.b-p { background:rgba(106,58,181,0.2); color:#b07ae0; border:1px solid rgba(106,58,181,0.3); }
+.b-o { background:rgba(201,168,76,0.15); color:#e2c96a; border:1px solid rgba(201,168,76,0.25); }
+
+.pain-gain-grid { display:grid; grid-template-columns:1fr 1fr; gap:3px; background:var(--border); border-radius:10px; overflow:hidden; }
+.pg-cell { background:var(--card); padding:24px 20px; }
+.pg-label { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.15em; text-transform:uppercase; margin-bottom:14px; font-weight:600; }
+.pg-label.pain { color:var(--red); }
+.pg-label.gain { color:var(--green); }
+
+/* ═══════════════════════════════════════════
+   INSIGHT CARDS (pain / opportunity)
+═══════════════════════════════════════════ */
+.insights-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-bottom:24px; }
+.insight-card { background:var(--card); border:1px solid var(--border); border-radius:8px; padding:20px 18px; position:relative; overflow:hidden; }
+.insight-card::before { content:''; position:absolute; top:0; left:0; width:3px; height:100%; }
+.ic-red::before   { background:var(--red); }
+.ic-green::before { background:var(--green); }
+.ic-gold::before  { background:var(--gold); }
+.ic-blue::before  { background:var(--blue); }
+.ic-num { font-family:'Playfair Display',serif; font-size:28px; font-weight:900; color:var(--gold); opacity:0.15; line-height:1; margin-bottom:6px; }
+.ic-title { font-size:14px; font-weight:700; margin-bottom:6px; }
+.ic-body { font-size:13px; color:var(--muted); line-height:1.55; }
+
+/* ═══════════════════════════════════════════
+   FEATURE CARDS
+═══════════════════════════════════════════ */
+.features-grid-2col { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:24px; }
+.feature-card { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:20px 18px; position:relative; overflow:hidden; }
+.feature-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; }
+.fc-both::before { background:linear-gradient(90deg,var(--blue),var(--green)); }
+.fc-eng::before  { background:linear-gradient(90deg,var(--green),var(--gold)); }
+.fc-acq::before  { background:linear-gradient(90deg,var(--blue),var(--purple)); }
+.fc-header { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:10px; gap:8px; }
+.fc-num-badge { font-family:'Playfair Display',serif; font-size:28px; font-weight:900; color:var(--gold); opacity:0.18; line-height:1; flex-shrink:0; }
+.fc-tag-group { display:flex; gap:4px; flex-wrap:wrap; }
+.fc-name-text { font-size:14px; font-weight:700; margin-bottom:7px; }
+.fc-desc-text { font-size:13px; color:var(--muted); line-height:1.55; }
+
+/* ═══════════════════════════════════════════
+   MATRIX / RANKING
+═══════════════════════════════════════════ */
+.matrix-static { border:1px solid var(--border); border-radius:10px; overflow:hidden; margin-bottom:20px; }
+.matrix-header { background:var(--surface); padding:12px 18px; font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.14em; text-transform:uppercase; color:var(--gold); }
+.matrix-body { background:var(--card); padding:18px; }
+.quadrant-grid { display:grid; grid-template-columns:1fr 1fr; grid-template-rows:1fr 1fr; gap:3px; background:var(--border); border-radius:6px; overflow:hidden; }
+.quad { background:var(--card2); padding:16px 14px; min-height:90px; }
+.quad-title { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:10px; font-weight:600; }
+.quad-title.wins { color:var(--green); }
+.quad-title.bets { color:var(--gold); }
+.quad-title.fills { color:#888; }
+.quad-title.reconsider { color:var(--red); }
+.quad-feature { display:inline-block; padding:4px 10px; border-radius:4px; font-size:12px; font-weight:600; margin:2px 3px 2px 0; }
+.qf-green { background:rgba(58,158,106,0.15); color:#7adda8; border:1px solid rgba(58,158,106,0.25); }
+.qf-gold  { background:rgba(201,168,76,0.12); color:#e2c96a; border:1px solid rgba(201,168,76,0.2); }
+.qf-grey  { background:rgba(255,255,255,0.06); color:#888; border:1px solid #333; }
+.qf-red   { background:rgba(201,76,76,0.15); color:#e87a7a; border:1px solid rgba(201,76,76,0.25); }
+.matrix-axis-labels { display:flex; justify-content:space-between; margin-top:8px; font-family:'DM Mono',monospace; font-size:10px; color:#666; }
+
+.rank-table { width:100%; border-collapse:collapse; font-size:13px; margin-bottom:24px; }
+.rank-table th { background:var(--surface); color:var(--gold); font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.1em; text-transform:uppercase; padding:12px 10px; text-align:left; border:1px solid #2a2a2a; }
+.rank-table td { padding:12px 10px; border:1px solid #222; vertical-align:middle; }
+.rank-table tr.winner td { background:rgba(201,168,76,0.05); border-left:2px solid var(--gold); }
+.rank-num-big { font-family:'Playfair Display',serif; font-size:24px; font-weight:900; color:var(--gold); opacity:0.45; }
+.rank-name { font-weight:700; font-size:14px; margin-bottom:3px; }
+.rank-sub { font-size:12px; color:var(--muted); }
+.score-total { font-family:'Playfair Display',serif; font-size:22px; font-weight:900; color:var(--gold); }
+.badge-winner { display:inline-block; padding:3px 10px; background:var(--gold); color:#0a0a0a; font-size:10px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; border-radius:12px; font-family:'DM Mono',monospace; }
+.badge-next   { display:inline-block; padding:3px 10px; background:rgba(58,158,106,0.15); color:#7adda8; font-size:10px; font-weight:600; border-radius:12px; border:1px solid rgba(58,158,106,0.25); font-family:'DM Mono',monospace; }
+.badge-later  { display:inline-block; padding:3px 10px; background:rgba(255,255,255,0.06); color:#888; font-size:10px; font-weight:600; border-radius:12px; font-family:'DM Mono',monospace; }
+
+.score-bar-row { display:flex; align-items:center; gap:8px; margin-bottom:4px; font-size:11px; }
+.sb-label { min-width:80px; color:#777; font-size:11px; }
+.sb-track { flex:1; height:5px; background:#222; border-radius:3px; overflow:hidden; }
+.sb-fill { height:100%; border-radius:3px; }
+.sb-acq  { background:var(--blue); }
+.sb-eng  { background:var(--green); }
+.sb-ease { background:#c9844c; }
+.sb-diff { background:var(--purple); }
+
+.winner-callout { background:var(--card); border:1px solid rgba(201,168,76,0.25); border-radius:10px; padding:28px 24px; margin-top:24px; border-left:4px solid var(--gold); }
+.wc-label { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.16em; text-transform:uppercase; color:var(--gold); margin-bottom:8px; }
+.wc-title { font-family:'Playfair Display',serif; font-size:20px; font-weight:700; margin-bottom:10px; }
+.wc-body { font-size:14px; color:var(--muted); line-height:1.65; }
+.why-table { width:100%; border-collapse:collapse; font-size:13px; margin-top:18px; }
+.why-table th { background:rgba(201,168,76,0.08); color:var(--gold); font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.1em; text-transform:uppercase; padding:8px 12px; text-align:left; }
+.why-table td { padding:10px 12px; border-bottom:1px solid rgba(201,168,76,0.08); color:rgba(245,240,232,0.75); font-size:13px; }
+.why-table td:first-child { font-weight:600; color:var(--gold2); white-space:nowrap; }
+
+/* ═══════════════════════════════════════════
+   UTILITY
+═══════════════════════════════════════════ */
+.sec-label { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.2em; text-transform:uppercase; color:var(--gold); margin-bottom:8px; }
+.sec-h2 { font-family:'Playfair Display',serif; font-size:22px; font-weight:700; margin-bottom:6px; }
+.sec-desc { font-size:14px; color:var(--muted); line-height:1.6; margin-bottom:20px; }
+.footnote { font-family:'DM Mono',monospace; font-size:11px; color:#555; margin-top:32px; padding-top:14px; border-top:1px solid #1e1e1e; letter-spacing:0.03em; }
+.mt8{margin-top:8px;} .mt12{margin-top:12px;} .mt16{margin-top:16px;} .mt20{margin-top:20px;}
+.mb8{margin-bottom:8px;} .mb12{margin-bottom:12px;} .mb16{margin-bottom:16px;}
+
+/* ═══════════════════════════════════════════
+   WIREFRAME STYLES (Part III)
+═══════════════════════════════════════════ */
+
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+  
+
+  /* PAGE HEADER */
+  .page-header { padding:40px 48px 28px; border-bottom:1px solid var(--border); }
+  .ph-label { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.25em; text-transform:uppercase; color:var(--gold); margin-bottom:8px; }
+  .ph-title { font-family:'Playfair Display',serif; font-size:36px; font-weight:900; }
+  .ph-title span { color:var(--gold); font-style:italic; }
+  .ph-sub { font-size:12px; color:var(--muted); margin-top:6px; font-family:'DM Mono',monospace; letter-spacing:0.06em; }
+
+  /* ASSUMPTIONS BOX */
+  .assumptions { margin:24px 48px; background:rgba(201,168,76,0.06); border:1px solid var(--border); border-left:3px solid var(--gold); border-radius:8px; padding:16px 20px; display:flex; gap:32px; flex-wrap:wrap; }
+  .ass-item { font-size:11.5px; line-height:1.5; }
+  .ass-key { font-family:'DM Mono',monospace; font-size:9px; letter-spacing:0.15em; text-transform:uppercase; color:var(--gold); margin-bottom:3px; }
+
+  /* SCREENS CONTAINER */
+  .screens { padding:32px 48px 64px; display:flex; flex-direction:column; gap:64px; }
+
+  /* SCREEN BLOCK */
+  .screen-block { display:grid; grid-template-columns:280px 1fr; gap:40px; align-items:start; }
+  .screen-block.reverse { grid-template-columns:1fr 280px; }
+  .screen-block.reverse .phone-wrap { order:2; }
+  .screen-block.reverse .annotations { order:1; }
+
+  /* SCREEN LABEL */
+  .screen-meta { margin-bottom:16px; }
+  .screen-num { font-family:'Playfair Display',serif; font-size:48px; font-weight:900; color:var(--gold); opacity:0.15; line-height:1; }
+  .screen-title { font-family:'DM Sans',sans-serif; font-size:18px; font-weight:700; margin-top:-8px; margin-bottom:4px; }
+  .screen-desc { font-size:12px; color:var(--muted); line-height:1.6; }
+
+  /* PHONE SHELL */
+  .phone-wrap { display:flex; flex-direction:column; align-items:center; }
+  .phone {
+    width: 260px;
+    background: var(--wf-bg);
+    border: 2px solid var(--phone-border);
+    border-radius: 32px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 0 40px rgba(0,0,0,0.5);
+  }
+
+  .phone-notch {
+    background: #111;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+  .notch-pill { width:80px; height:10px; background:#222; border-radius:8px; }
+  .status-bar { display:flex; justify-content:space-between; padding:2px 16px 0; font-size:8px; color:var(--wf-muted); font-family:'DM Mono',monospace; }
+
+  .phone-screen { min-height:520px; background:var(--wf-bg); padding:0; overflow:hidden; }
+
+  /* CRED TOP BAR */
+  .cred-topbar {
+    background:#111;
+    padding:10px 14px 8px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+  }
+  .cred-logo { font-family:'DM Mono',monospace; font-size:10px; font-weight:700; letter-spacing:0.2em; color:var(--wf-accent); }
+  .cred-avatar { width:22px; height:22px; border-radius:50%; background:#333; border:1px solid #555; display:flex; align-items:center; justify-content:center; font-size:8px; color:#aaa; }
+  .cred-coins-chip { background:#222; border:1px solid #444; border-radius:12px; padding:2px 8px; font-size:8px; color:var(--wf-accent); font-family:'DM Mono',monospace; }
+
+  /* SCREEN CONTENT COMPONENTS */
+  .screen-pad { padding:12px 14px; }
+  .wf-section-label { font-size:8px; font-family:'DM Mono',monospace; letter-spacing:0.15em; text-transform:uppercase; color:var(--wf-muted); margin-bottom:6px; margin-top:14px; }
+  .wf-section-label:first-child { margin-top:0; }
+
+  .wf-card {
+    background:var(--wf-card);
+    border:1px solid var(--wf-border);
+    border-radius:10px;
+    padding:12px;
+    margin-bottom:8px;
+  }
+
+  .wf-card-title { font-size:10px; font-weight:600; margin-bottom:4px; color:var(--wf-text); }
+  .wf-card-sub { font-size:8.5px; color:var(--wf-muted); line-height:1.4; }
+
+  .wf-highlight-card {
+    background:linear-gradient(135deg,#1e1a10,#1a1a1a);
+    border:1px solid var(--wf-accent);
+    border-radius:10px;
+    padding:12px;
+    margin-bottom:8px;
+  }
+
+  .wf-row { display:flex; justify-content:space-between; align-items:center; margin-bottom:4px; }
+  .wf-num { font-family:'DM Mono',monospace; font-size:18px; font-weight:700; color:var(--wf-accent); }
+  .wf-num-sm { font-family:'DM Mono',monospace; font-size:12px; color:var(--wf-accent); }
+  .wf-label { font-size:8px; color:var(--wf-muted); margin-top:2px; }
+
+  .wf-btn {
+    background:var(--wf-accent);
+    color:#0a0a0a;
+    border:none;
+    border-radius:8px;
+    padding:8px 14px;
+    font-size:9px;
+    font-weight:700;
+    font-family:'DM Mono',monospace;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    width:100%;
+    margin-top:8px;
+  }
+
+  .wf-btn-ghost {
+    background:transparent;
+    color:var(--wf-accent);
+    border:1px solid var(--wf-accent);
+    border-radius:8px;
+    padding:7px 14px;
+    font-size:9px;
+    font-weight:600;
+    font-family:'DM Mono',monospace;
+    letter-spacing:0.08em;
+    width:100%;
+    margin-top:6px;
+  }
+
+  /* BAR CHART IN WIREFRAME */
+  .wf-bar-row { display:flex; align-items:center; gap:6px; margin-bottom:5px; }
+  .wf-bar-label { font-size:8px; color:var(--wf-muted); width:52px; flex-shrink:0; }
+  .wf-bar-track { flex:1; height:6px; background:#333; border-radius:3px; overflow:hidden; }
+  .wf-bar-fill { height:100%; border-radius:3px; background:var(--wf-accent); }
+  .wf-bar-val { font-size:8px; color:var(--wf-text); width:36px; text-align:right; font-family:'DM Mono',monospace; }
+
+  /* DIVIDER */
+  .wf-divider { height:1px; background:var(--wf-border); margin:10px 0; }
+
+  /* TAG */
+  .wf-tag { display:inline-block; padding:2px 6px; border-radius:4px; font-size:7.5px; font-weight:600; letter-spacing:0.04em; text-transform:uppercase; font-family:'DM Mono',monospace; margin-right:4px; margin-bottom:3px; }
+  .tag-green { background:rgba(74,158,106,0.2); color:#6dcc90; border:1px solid rgba(74,158,106,0.3); }
+  .tag-red { background:rgba(158,74,74,0.2); color:#cc8080; border:1px solid rgba(158,74,74,0.3); }
+  .tag-gold { background:rgba(201,168,76,0.15); color:var(--wf-accent); border:1px solid rgba(201,168,76,0.25); }
+  .tag-blue { background:rgba(74,106,158,0.2); color:#8097cc; border:1px solid rgba(74,106,158,0.3); }
+
+  /* BOTTOM NAV */
+  .wf-bottom-nav {
+    background:#111;
+    border-top:1px solid #2a2a2a;
+    padding:8px 0 10px;
+    display:flex;
+    justify-content:space-around;
+  }
+  .wf-nav-item { display:flex; flex-direction:column; align-items:center; gap:2px; }
+  .wf-nav-icon { width:18px; height:18px; background:#2a2a2a; border-radius:4px; }
+  .wf-nav-icon.active { background:var(--wf-accent); }
+  .wf-nav-label { font-size:6.5px; color:var(--wf-muted); font-family:'DM Mono',monospace; }
+  .wf-nav-label.active { color:var(--wf-accent); }
+
+  /* SCORE RING */
+  .score-ring { width:64px; height:64px; border-radius:50%; border:3px solid var(--wf-accent); display:flex; flex-direction:column; align-items:center; justify-content:center; background:#1a1a10; }
+  .ring-num { font-family:'DM Mono',monospace; font-size:16px; font-weight:700; color:var(--wf-accent); line-height:1; }
+  .ring-label { font-size:6px; color:var(--wf-muted); margin-top:1px; }
+
+  /* INSIGHT PILL */
+  .insight-pill { background:#1e1e1e; border:1px solid #3a3a3a; border-radius:8px; padding:8px 10px; margin-bottom:6px; display:flex; gap:8px; align-items:flex-start; }
+  .ip-icon { width:20px; height:20px; border-radius:6px; background:#2a2a2a; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:10px; }
+  .ip-text { font-size:8px; color:var(--wf-text); line-height:1.4; }
+  .ip-text strong { color:var(--wf-accent); }
+
+  /* PERMISSION SCREEN */
+  .perm-icon { width:56px; height:56px; background:rgba(201,168,76,0.1); border:2px solid var(--wf-accent); border-radius:16px; margin:0 auto 10px; display:flex; align-items:center; justify-content:center; font-size:24px; }
+  .perm-list-item { display:flex; gap:8px; margin-bottom:8px; font-size:8.5px; color:var(--wf-text); line-height:1.4; align-items:flex-start; }
+  .perm-check { color:var(--wf-green); font-size:10px; margin-top:1px; }
+
+  /* STEP INDICATOR */
+  .step-row { display:flex; gap:4px; justify-content:center; margin-bottom:14px; }
+  .step-dot { width:20px; height:4px; border-radius:2px; background:#333; }
+  .step-dot.active { background:var(--wf-accent); }
+
+  /* ANNOTATIONS */
+  .annotations { padding-top:12px; }
+  .ann-item { display:flex; gap:12px; margin-bottom:18px; align-items:flex-start; }
+  .ann-num { width:24px; height:24px; border-radius:50%; background:rgba(201,168,76,0.15); border:1px solid var(--border); color:var(--gold); font-family:'DM Mono',monospace; font-size:10px; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px; }
+  .ann-body {}
+  .ann-title { font-size:12.5px; font-weight:600; margin-bottom:3px; }
+  .ann-text { font-size:11.5px; color:var(--muted); line-height:1.55; }
+
+  /* FLOW ARROW */
+  .flow-arrow { display:flex; align-items:center; justify-content:center; gap:16px; padding:8px 0; flex-wrap:wrap; }
+  .flow-chip { background:rgba(201,168,76,0.08); border:1px solid var(--border); border-radius:20px; padding:5px 14px; font-size:10px; font-family:'DM Mono',monospace; color:var(--gold); letter-spacing:0.06em; }
+  .flow-sep { color:var(--muted); font-size:14px; }
+
+  /* NOTIFICATION BANNER */
+  .notif-banner { background:#1e1e1e; border:1px solid #3a3a3a; border-radius:10px; padding:10px 12px; margin:0 14px 12px; display:flex; gap:8px; align-items:flex-start; }
+  .notif-icon { width:28px; height:28px; background:rgba(201,168,76,0.15); border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:14px; flex-shrink:0; }
+  .notif-body { font-size:8px; color:var(--wf-text); line-height:1.5; }
+  .notif-title { font-weight:600; color:var(--wf-accent); margin-bottom:2px; font-size:8.5px; }
+  .notif-time { font-size:7px; color:var(--wf-muted); margin-top:2px; font-family:'DM Mono',monospace; }
+
+  @media(max-width:800px){
+    .screen-block, .screen-block.reverse { grid-template-columns:1fr; }
+    .screen-block.reverse .phone-wrap { order:1; }
+    .screen-block.reverse .annotations { order:2; }
+    .screens,.page-header,.assumptions { padding-left:20px; padding-right:20px; }
+  }
+
+/* Wireframe section wrapper */
+.wf-section { padding: 0 64px 80px; max-width:1280px; margin:0 auto; }
+.wf-section .page-header { padding: 0 0 28px; border-bottom:1px solid rgba(201,168,76,0.2); margin-bottom:28px; }
+.wf-section .assumptions { margin: 0 0 24px; }
+.wf-section .screens { padding: 32px 0 0; }
+
+/* ═══════════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════════ */
+@media(max-width:900px) {
+  .sticky-nav { padding:0 20px; }
+  .sn-links { gap:16px; }
+  .cover-inner, .part-divider, .section-wrap, .wf-section { padding-left:24px; padding-right:24px; }
+  .section-header-bar { margin:0 -24px 32px; padding:20px 24px; }
+  .cover-meta-grid { grid-template-columns:1fr 1fr; }
+  .insights-grid { grid-template-columns:1fr 1fr; }
+  .features-grid-2col { grid-template-columns:1fr; }
+  .empathy-grid, .pain-gain-grid, .quadrant-grid { grid-template-columns:1fr; }
+  .screen-block, .screen-block.reverse { grid-template-columns:1fr; }
+  .screen-block.reverse .phone-wrap { order:1; }
+  .screen-block.reverse .annotations { order:2; }
+}
+@media(max-width:600px) {
+  .insights-grid { grid-template-columns:1fr; }
+  .cover-meta-grid { grid-template-columns:1fr; }
+}
+
+</style>
+</head>
+<body>
+
+<!-- STICKY NAV -->
+<nav class="sticky-nav">
+  <div class="sn-logo">CRED · PM Case Study · Aryan Singh</div>
+  <div class="sn-links">
+    <span class="sn-link" onclick="document.getElementById('cover').scrollIntoView({behavior:'smooth'})">Cover</span>
+    <span class="sn-link" onclick="document.getElementById('research').scrollIntoView({behavior:'smooth'})">Research</span>
+    <span class="sn-link" onclick="document.getElementById('features').scrollIntoView({behavior:'smooth'})">Features</span>
+    <span class="sn-link" onclick="document.getElementById('wireframes').scrollIntoView({behavior:'smooth'})">Wireframes</span>
+  </div>
+</nav>
+
+<!-- ═══════ COVER ═══════ -->
+<div id="cover">
+<!-- ============================
+     COVER PAGE
+     ============================ -->
+<div class="cover">
+  <div class="cover-top-bar"></div>
+  <div class="cover-deco">C</div>
+  <div class="cover-inner">
+
+    <div class="cover-label">Product Management Case Study</div>
+
+    <div class="cover-eyebrow">Strategic Product Analysis</div>
+    <div class="cover-title">
+      Building a <span class="gold">USP</span><br>for CRED
+    </div>
+    <div class="cover-subtitle">
+      From User Research to Feature Prioritization
+    </div>
+
+    <div class="cover-meta-grid">
+      <div class="cover-meta-item">
+        <div class="meta-key">Company</div>
+        <div class="meta-val">CRED (Dreamplug Technologies)</div>
+      </div>
+      <div class="cover-meta-item">
+        <div class="meta-key">Sector</div>
+        <div class="meta-val">Fintech / Consumer Credit</div>
+      </div>
+      <div class="cover-meta-item">
+        <div class="meta-key">Objective</div>
+        <div class="meta-val">Acquisition + Engagement</div>
+      </div>
+      <div class="cover-meta-item">
+        <div class="meta-key">Methodology</div>
+        <div class="meta-val">Jobs-to-be-Done + Empathy</div>
+      </div>
+      <div class="cover-meta-item">
+        <div class="meta-key">Features Analyzed</div>
+        <div class="meta-val">10 Candidates · 1 Selected</div>
+      </div>
+      <div class="cover-meta-item">
+        <div class="meta-key">Deliverable</div>
+        <div class="meta-val">Journey Map, Empathy Map, PRD</div>
+      </div>
+    </div>
+
+    <div class="cover-toc">
+      <div class="toc-title">Contents</div>
+
+      <div class="toc-item">
+        <span class="toc-num">I</span>
+        <span class="toc-text">User Journey Map — Core Loop & Ecosystem</span>
+        <span class="toc-line"></span>
+        <span class="toc-pg">03</span>
+      </div>
+      <div class="toc-item">
+        <span class="toc-num">II</span>
+        <span class="toc-text">Empathy Map — "Aspirational Arjun"</span>
+        <span class="toc-line"></span>
+        <span class="toc-pg">06</span>
+      </div>
+      <div class="toc-item">
+        <span class="toc-num">III</span>
+        <span class="toc-text">Pain Points & Strategic Opportunities</span>
+        <span class="toc-line"></span>
+        <span class="toc-pg">08</span>
+      </div>
+      <div class="toc-item">
+        <span class="toc-num">IV</span>
+        <span class="toc-text">Feature Ideation — 10 Candidates</span>
+        <span class="toc-line"></span>
+        <span class="toc-pg">10</span>
+      </div>
+      <div class="toc-item">
+        <span class="toc-num">V</span>
+        <span class="toc-text">Value vs. Effort Matrix & Prioritized Ranking</span>
+        <span class="toc-line"></span>
+        <span class="toc-pg">13</span>
+      </div>
+      <div class="toc-item">
+        <span class="toc-num">VI</span>
+        <span class="toc-text">Selected Feature — CRED Money Lens</span>
+        <span class="toc-line"></span>
+        <span class="toc-pg">15</span>
+      </div>
+    </div>
+
+    <div class="cover-author">
+      <div class="author-avatar">A</div>
+      <div>
+        <div class="author-name">Aryan Singh</div>
+        <div class="author-role">Product Management Case Study &nbsp;·&nbsp; March 2026</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</div>
+
+<!-- ═══════ PART I DIVIDER ═══════ -->
+<div id="research" class="part-divider">
+  <div class="pd-label">Part I — User Research</div>
+  <div class="pd-num">I</div>
+  <div class="pd-title">User Journey<br><span class="gold">Map</span></div>
+  <div class="pd-rule"></div>
+  <div class="pd-desc">Mapping the end-to-end experience of a CRED user across 6 stages — from discovery through to churn risk.</div>
+</div>
+
+<!-- ═══════ JOURNEY MAP ═══════ -->
+<div class="section-wrap">
+  <div class="section-header-bar">
+    <div class="sh-left">
+      <div class="sh-label">Section 01 · User Research</div>
+      <div class="sh-title">User Journey <span class="gold">Map</span></div>
+    </div>
+    <div class="sh-right">CRED PM Case Study · Aryan Singh</div>
+  </div>
+  <div class="persona-box">
+    <div class="pa-avatar">A</div>
+    <div class="pa-info">
+      <div class="pa-name">Aspirational Arjun — Primary Persona</div>
+      <div class="pa-desc">Age 28–38 · Income ₹12L–₹40L · 2–3 credit cards · Credit score 750+ · Urban tech-savvy professional</div>
+      <div class="pa-jtbd">"Pay bills effortlessly, feel financially smart, and get rewarded for being responsible — without adding complexity."</div>
+    </div>
+  </div>
+  <div class="sec-label" style="margin-bottom:10px;">Rows 1–3: Actions · Thoughts · Feelings</div>
+  <div class="journey-table-wrap">
+    <table class="jt">
+      <thead><tr>
+        <th style="width:8%"></th>
+        <th class="stage-th">1. Discovery &amp; Onboarding</th>
+        <th class="stage-th">2. First Bill Payment</th>
+        <th class="stage-th">3. Coins &amp; Rewards</th>
+        <th class="stage-th">4. Repeat Usage</th>
+        <th class="stage-th">5. Ecosystem</th>
+        <th class="stage-th">6. Churn Risk</th>
+      </tr></thead>
+      <tbody>
+        <tr class="row-actions">
+          <td class="row-label-cell">Actions</td>
+          <td><div class="bullet-item"><div class="bullet-dot dot-g"></div>Hears about CRED via friend/ad</div><div class="bullet-item"><div class="bullet-dot dot-g"></div>Checks credit score eligibility</div><div class="bullet-item"><div class="bullet-dot dot-g"></div>Downloads &amp; signs up</div><div class="bullet-item"><div class="bullet-dot dot-g"></div>Links credit cards</div></td>
+          <td><div class="bullet-item"><div class="bullet-dot dot-g"></div>Gets due date notification</div><div class="bullet-item"><div class="bullet-dot dot-g"></div>Opens app, sees bill amount</div><div class="bullet-item"><div class="bullet-dot dot-g"></div>Pays bill via CRED</div><div class="bullet-item"><div class="bullet-dot dot-g"></div>Sees coins credited</div></td>
+          <td><div class="bullet-item"><div class="bullet-dot dot-o"></div>Browses reward catalogue</div><div class="bullet-item"><div class="bullet-dot dot-o"></div>Attempts coin redemption</div><div class="bullet-item"><div class="bullet-dot dot-o"></div>Finds reward (or not)</div><div class="bullet-item"><div class="bullet-dot dot-o"></div>Saves coins passively</div></td>
+          <td><div class="bullet-item"><div class="bullet-dot dot-o"></div>Returns next month for bill</div><div class="bullet-item"><div class="bullet-dot dot-o"></div>Accumulates coins passively</div><div class="bullet-item"><div class="bullet-dot dot-o"></div>Pays and exits quickly</div></td>
+          <td><div class="bullet-item"><div class="bullet-dot dot-b"></div>Discovers Travel / Store</div><div class="bullet-item"><div class="bullet-dot dot-b"></div>Tries CRED Cash / Mint</div><div class="bullet-item"><div class="bullet-dot dot-b"></div>Uses Garage / UPI</div></td>
+          <td><div class="bullet-item"><div class="bullet-dot dot-r"></div>Stops finding reward value</div><div class="bullet-item"><div class="bullet-dot dot-r"></div>Switches to bank app</div><div class="bullet-item"><div class="bullet-dot dot-r"></div>Ignores notifications</div></td>
+        </tr>
+        <tr class="row-thoughts">
+          <td class="row-label-cell">Thoughts</td>
+          <td><span class="italic-quote">"Only high credit score users get in — that's me."</span></td>
+          <td><span class="italic-quote">"This is clean. I get rewarded just for paying my bill?"</span></td>
+          <td><span class="italic-quote">"These offers don't excite me. When do coins expire?"</span></td>
+          <td><span class="italic-quote">"I only come here once a month — why open it more?"</span></td>
+          <td><span class="italic-quote">"Interesting, but MakeMyTrip is already on my phone."</span></td>
+          <td><span class="italic-quote">"I have ₹8,000 coins but nothing worth spending them on."</span></td>
+        </tr>
+        <tr class="row-feelings">
+          <td class="row-label-cell">Feelings</td>
+          <td><span class="tag-sm tg-neutral">Curious</span> <span class="tag-sm tg-neutral">Validated</span><br><small style="color:#666;font-size:11px;margin-top:4px;display:block">Exclusivity is a strong hook</small></td>
+          <td><span class="tag-sm tg-neutral">Delighted</span> <span class="tag-sm tg-neutral">Surprised</span><br><small style="color:#666;font-size:11px;margin-top:4px;display:block">Smooth UX, positive first impression</small></td>
+          <td><span class="tag-sm tg-pain">Underwhelmed</span> <span class="tag-sm tg-pain">Confused</span><br><small style="color:#666;font-size:11px;margin-top:4px;display:block">Coin value ambiguity = first friction</small></td>
+          <td><span class="tag-sm tg-pain">Indifferent</span> <span class="tag-sm tg-neutral">Habitual</span><br><small style="color:#666;font-size:11px;margin-top:4px;display:block">Becomes a passive utility</small></td>
+          <td><span class="tag-sm tg-neutral">Intrigued</span> <span class="tag-sm tg-pain">Skeptical</span><br><small style="color:#666;font-size:11px;margin-top:4px;display:block">Competing apps have more trust</small></td>
+          <td><span class="tag-sm tg-pain">Frustrated</span> <span class="tag-sm tg-pain">Disengaged</span><br><small style="color:#666;font-size:11px;margin-top:4px;display:block">Lost trust in reward system</small></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="sec-label" style="margin-bottom:10px;margin-top:24px;">Rows 4–6: Touchpoints · Pain Points · Opportunities</div>
+  <div class="journey-table-wrap">
+    <table class="jt">
+      <thead><tr>
+        <th style="width:8%"></th>
+        <th class="stage-th">1. Discovery &amp; Onboarding</th>
+        <th class="stage-th">2. First Bill Payment</th>
+        <th class="stage-th">3. Coins &amp; Rewards</th>
+        <th class="stage-th">4. Repeat Usage</th>
+        <th class="stage-th">5. Ecosystem</th>
+        <th class="stage-th">6. Churn Risk</th>
+      </tr></thead>
+      <tbody>
+        <tr class="row-touch">
+          <td class="row-label-cell">Touch&shy;points</td>
+          <td><span class="tag-sm tg-touch">Word of Mouth</span> <span class="tag-sm tg-touch">Instagram</span> <span class="tag-sm tg-touch">App Store</span></td>
+          <td><span class="tag-sm tg-touch">Push Notif</span> <span class="tag-sm tg-touch">Payment Flow</span> <span class="tag-sm tg-touch">Coin Anim</span></td>
+          <td><span class="tag-sm tg-touch">Rewards Tab</span> <span class="tag-sm tg-touch">Coin Balance</span> <span class="tag-sm tg-touch">Email</span></td>
+          <td><span class="tag-sm tg-touch">Monthly Notif</span> <span class="tag-sm tg-touch">Home Screen</span> <span class="tag-sm tg-touch">Coin Expiry</span></td>
+          <td><span class="tag-sm tg-touch">Store</span> <span class="tag-sm tg-touch">Travel Tab</span> <span class="tag-sm tg-touch">CRED Cash</span> <span class="tag-sm tg-touch">Garage</span></td>
+          <td><span class="tag-sm tg-touch">Win-back Email</span> <span class="tag-sm tg-touch">Push Notif</span></td>
+        </tr>
+        <tr class="row-pain">
+          <td class="row-label-cell">Pain Points</td>
+          <td><div class="bullet-item"><div class="bullet-dot dot-r"></div>Score barrier feels arbitrary</div><div class="bullet-item"><div class="bullet-dot dot-r"></div>No clear benefit vs. bank app</div></td>
+          <td><div class="bullet-item"><div class="bullet-dot dot-r"></div>Multi-card linking is tedious</div><div class="bullet-item"><div class="bullet-dot dot-r"></div>Coin value not explained</div></td>
+          <td><div class="bullet-item"><div class="bullet-dot dot-r"></div>Rewards not personalised</div><div class="bullet-item"><div class="bullet-dot dot-r"></div>Feel like ads, not perks</div></td>
+          <td><div class="bullet-item"><div class="bullet-dot dot-r"></div>No reason to open mid-cycle</div><div class="bullet-item"><div class="bullet-dot dot-r"></div>No financial insights</div></td>
+          <td><div class="bullet-item"><div class="bullet-dot dot-r"></div>Features feel disconnected</div><div class="bullet-item"><div class="bullet-dot dot-r"></div>Inferior to category leaders</div></td>
+          <td><div class="bullet-item"><div class="bullet-dot dot-r"></div>Zero switching cost</div><div class="bullet-item"><div class="bullet-dot dot-r"></div>Coin expiry = resentment</div></td>
+        </tr>
+        <tr class="row-opp">
+          <td class="row-label-cell">Oppor&shy;tunities</td>
+          <td><div class="bullet-item"><div class="bullet-dot dot-g"></div>Aspirational waitlist sub-750</div><div class="bullet-item"><div class="bullet-dot dot-g"></div>Stronger referral mechanics</div></td>
+          <td><div class="bullet-item"><div class="bullet-dot dot-g"></div>Show projected annual savings</div><div class="bullet-item"><div class="bullet-dot dot-g"></div>Gamified milestones</div></td>
+          <td><div class="bullet-item"><div class="bullet-dot dot-g"></div>AI-personalised reward feed</div><div class="bullet-item"><div class="bullet-dot dot-g"></div>Goal-based coin saving</div></td>
+          <td><div class="bullet-item"><div class="bullet-dot dot-g"></div>Weekly financial digest</div><div class="bullet-item"><div class="bullet-dot dot-g"></div>Spending insights &amp; alerts</div></td>
+          <td><div class="bullet-item"><div class="bullet-dot dot-g"></div>Cross-feature coin utility</div><div class="bullet-item"><div class="bullet-dot dot-g"></div>Unified CRED Score layer</div></td>
+          <td><div class="bullet-item"><div class="bullet-dot dot-g"></div>Credit score milestones</div><div class="bullet-item"><div class="bullet-dot dot-g"></div>Peer benchmarks</div></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="footnote">† Journey mapped for primary persona "Aspirational Arjun". Core bill-payment loop first, extending into ecosystem secondary behaviours.</div>
+</div>
+
+<!-- ═══════ PART I CONTINUED: EMPATHY + PAIN ═══════ -->
+<div class="part-divider" style="padding:60px 64px;">
+  <div class="pd-label">Part I — User Research (Continued)</div>
+  <div class="pd-num" style="font-size:80px;">II</div>
+  <div class="pd-title">Empathy <span class="gold">Map</span></div>
+  <div class="pd-rule"></div>
+  <div class="pd-desc">Going beneath the surface to understand what Arjun truly thinks, feels, sees, and hears.</div>
+</div>
+
+<div class="section-wrap">
+  <div class="section-header-bar">
+    <div class="sh-left">
+      <div class="sh-label">Section 02 · Empathy Map</div>
+      <div class="sh-title">Inside <span class="gold">Arjun's</span> Head</div>
+    </div>
+    <div class="sh-right">CRED PM Case Study · Aryan Singh</div>
+  </div>
+<!-- ============================
+     EMPATHY MAP PAGE
+     ============================ -->
+<div class="content-page">
+
+  <div class="sh-title">Inside <span class="gold">Arjun's</span> Head</div>
+    </div>
+    <div class="sh-right">CRED PM Case Study &nbsp;·&nbsp; Aryan Singh</div>
+  </div>
+
+  <div class="empathy-grid">
+    <div class="em-cell em-think">
+      <div class="em-label">
+        <div class="em-icon" style="background:rgba(201,168,76,0.15)">💭</div>
+        Think &amp; Say
+      </div>
+      <div class="em-item"><div class="em-bullet b-o">T</div><span>"I have a good credit score — I deserve better rewards than basic cashback."</span></div>
+      <div class="em-item"><div class="em-bullet b-o">T</div><span>"I don't understand what my CRED coins are actually worth in rupees."</span></div>
+      <div class="em-item"><div class="em-bullet b-o">T</div><span>"CRED feels premium but I only open it once a month."</span></div>
+      <div class="em-item"><div class="em-bullet b-o">T</div><span>"I tell friends it's smart — but struggle to explain why beyond 'you earn coins'."</span></div>
+      <div class="em-item"><div class="em-bullet b-o">T</div><span>"Why can't I see all my card spends in one place and get real insights?"</span></div>
+    </div>
+
+    <div class="em-cell em-feel">
+      <div class="em-label">
+        <div class="em-icon" style="background:rgba(201,76,76,0.15)">❤️</div>
+        Feel
+      </div>
+      <div class="em-item"><div class="em-bullet b-r">F</div><span><strong>Pride</strong> — the exclusivity of CRED membership signals financial maturity.</span></div>
+      <div class="em-item"><div class="em-bullet b-r">F</div><span><strong>Frustration</strong> — rewards don't feel curated for his income level.</span></div>
+      <div class="em-item"><div class="em-bullet b-r">F</div><span><strong>Anxiety</strong> — unsure if he's making the best use of his credit cards.</span></div>
+      <div class="em-item"><div class="em-bullet b-r">F</div><span><strong>FOMO</strong> — suspects there are hidden benefits he's not accessing.</span></div>
+      <div class="em-item"><div class="em-bullet b-r">F</div><span><strong>Indifference</strong> — the app becomes invisible between billing cycles.</span></div>
+    </div>
+
+    <div class="em-cell em-see">
+      <div class="em-label">
+        <div class="em-icon" style="background:#e8f0fd">👁️</div>
+        See
+      </div>
+      <div class="em-item"><div class="em-bullet b-b">S</div><span>Friends using PhonePe/GPay for everything, including CC payments.</span></div>
+      <div class="em-item"><div class="em-bullet b-b">S</div><span>Influencers with CRED ads on Instagram — aspirational lifestyle imagery.</span></div>
+      <div class="em-item"><div class="em-bullet b-b">S</div><span>Bank apps with spend summaries and card offers (HDFC SmartBuy etc.).</span></div>
+      <div class="em-item"><div class="em-bullet b-b">S</div><span>CRED's rewards page full of vouchers — looks like a coupon site.</span></div>
+      <div class="em-item"><div class="em-bullet b-b">S</div><span>Coin balance growing but no motivation to actually redeem.</span></div>
+    </div>
+
+    <div class="em-cell em-hear">
+      <div class="em-label">
+        <div class="em-icon" style="background:rgba(106,58,181,0.15)">🎧</div>
+        Hear
+      </div>
+      <div class="em-item"><div class="em-bullet b-p">H</div><span>"CRED is just for bills — I use Paytm for everything else." — colleague</span></div>
+      <div class="em-item"><div class="em-bullet b-p">H</div><span>"Their coins are worthless — couldn't find anything to spend them on." — friend</span></div>
+      <div class="em-item"><div class="em-bullet b-p">H</div><span>"Wait, CRED has travel booking? I had no idea." — peer</span></div>
+      <div class="em-item"><div class="em-bullet b-p">H</div><span>"I wish one app could improve my credit score and reward me for it." — online</span></div>
+      <div class="em-item"><div class="em-bullet b-p">H</div><span>Financial independence podcasts — actively thinking about wealth building.</span></div>
+    </div>
+  </div>
+
+  <div class="pain-gain-grid">
+    <div class="pg-cell">
+      <div class="pg-label pain">Pains</div>
+      <div class="em-item"><div class="em-bullet b-r">!</div><span><strong>Dead coin economy</strong> — coins accumulate with no aspirational redemption target.</span></div>
+      <div class="em-item"><div class="em-bullet b-r">!</div><span><strong>Monthly-only engagement</strong> — no hook to open the app between billing cycles.</span></div>
+      <div class="em-item"><div class="em-bullet b-r">!</div><span><strong>Generic rewards</strong> — offers feel like ads, not personalised lifestyle benefits.</span></div>
+      <div class="em-item"><div class="em-bullet b-r">!</div><span><strong>No financial intelligence</strong> — CRED sees all spend data but never acts on it.</span></div>
+      <div class="em-item"><div class="em-bullet b-r">!</div><span><strong>Feature fragmentation</strong> — Travel, Store, Garage feel like separate, bolted-on apps.</span></div>
+      <div class="em-item"><div class="em-bullet b-r">!</div><span><strong>Zero switching cost</strong> — bank app or GPay replaces CRED in 30 seconds.</span></div>
+    </div>
+    <div class="pg-cell">
+      <div class="pg-label gain">Gains (What He Wants)</div>
+      <div class="em-item"><div class="em-bullet b-g">+</div><span><strong>Financial clarity</strong> — know where his money goes across all cards, automatically.</span></div>
+      <div class="em-item"><div class="em-bullet b-g">+</div><span><strong>Meaningful rewards</strong> — perks matching his lifestyle (travel, dining, fitness, tech).</span></div>
+      <div class="em-item"><div class="em-bullet b-g">+</div><span><strong>Credit score growth</strong> — actionable tips to improve score, not just view it.</span></div>
+      <div class="em-item"><div class="em-bullet b-g">+</div><span><strong>Aspiration &amp; status</strong> — feel part of an exclusive, smart-money community.</span></div>
+      <div class="em-item"><div class="em-bullet b-g">+</div><span><strong>Proactive nudges</strong> — tell him when to pay, redeem, and save. Don't make him think.</span></div>
+      <div class="em-item"><div class="em-bullet b-g">+</div><span><strong>Seamless everything</strong> — one app for payments, travel, credit, and financial health.</span></div>
+    </div>
+  </div>
+
+  <div class="footnote">† Empathy map synthesised from App Store/Play Store user reviews, UX research patterns, and fintech persona archetypes. Validated against journey map touchpoints.</div>
+</div>
+</div>
+
+<!-- ═══════ PAIN POINTS & OPPORTUNITIES ═══════ -->
+<div class="section-wrap" style="padding-top:40px;">
+  <div class="section-header-bar">
+    <div class="sh-left">
+      <div class="sh-label">Section 03 · Synthesis</div>
+      <div class="sh-title">Pain Points &amp; <span class="gold">Opportunities</span></div>
+    </div>
+    <div class="sh-right">CRED PM Case Study · Aryan Singh</div>
+  </div>
+<!-- ============================
+     PAIN POINTS & OPPORTUNITIES
+     ============================ -->
+<div class="content-page">
+
+  <div class="sh-title">Pain Points &amp; <span class="gold">Opportunities</span></div>
+    </div>
+    <div class="sh-right">CRED PM Case Study &nbsp;·&nbsp; Aryan Singh</div>
+  </div>
+
+  <div class="sec-label">Critical Pain Points</div>
+  <div class="insights-grid">
+    <div class="insight-card ic-red">
+      <div class="ic-num">P1</div>
+      <div class="ic-title">Dead Coin Economy</div>
+      <div class="ic-body">Users accumulate coins but find no aspirational redemption paths. Rewards feel like discount vouchers. The "exclusive currency" promise breaks at CRED's most critical conversion point.</div>
+    </div>
+    <div class="insight-card ic-red">
+      <div class="ic-num">P2</div>
+      <div class="ic-title">Monthly-Only Loop</div>
+      <div class="ic-body">Engagement is anchored to a single monthly event — the bill due date. There is no daily, weekly, or bi-weekly reason to open the app, making habit formation structurally impossible.</div>
+    </div>
+    <div class="insight-card ic-red">
+      <div class="ic-num">P3</div>
+      <div class="ic-title">Untapped Data Moat</div>
+      <div class="ic-body">CRED sees all credit card transactions — a goldmine of financial intelligence. Yet users receive no insights or alerts while competitors like Fi and Jupiter are actively monetising this.</div>
+    </div>
+    <div class="insight-card ic-red">
+      <div class="ic-num">P4</div>
+      <div class="ic-title">Zero Switching Cost</div>
+      <div class="ic-body">A user can switch to their bank app or PhonePe in under a minute. CRED has built no sticky financial layer — no savings, credit history, or tool that makes leaving genuinely painful.</div>
+    </div>
+    <div class="insight-card ic-red">
+      <div class="ic-num">P5</div>
+      <div class="ic-title">Feature Fragmentation</div>
+      <div class="ic-body">Travel, Store, Garage, Cash, Mint — each feels standalone. There is no unified narrative or cross-feature reward synergy making the whole greater than the sum of its parts.</div>
+    </div>
+    <div class="insight-card ic-red">
+      <div class="ic-num">P6</div>
+      <div class="ic-title">Weak Acquisition Funnel</div>
+      <div class="ic-body">The referral mechanic gives coins but doesn't create a compelling social loop. There's no "I want what they have" moment that drives organic word-of-mouth at scale.</div>
+    </div>
+  </div>
+
+  <div class="sec-label mt16">Strategic Opportunities</div>
+  <div class="insights-grid">
+    <div class="insight-card ic-green">
+      <div class="ic-num">O1</div>
+      <div class="ic-title">AI Financial Intelligence</div>
+      <div class="ic-body">Turn CRED into a personal CFO — weekly spend digests, smart breakdowns, and credit coaching. Solves P2 (engagement) and P3 (data monetisation) simultaneously.</div>
+    </div>
+    <div class="insight-card ic-green">
+      <div class="ic-num">O2</div>
+      <div class="ic-title">Goal-Based Coin Saving</div>
+      <div class="ic-body">Let users set aspirational goals ("Save for Maldives") and track coin progress. Transforms passive accumulation into an emotional journey — solving P1 and P2.</div>
+    </div>
+    <div class="insight-card ic-green">
+      <div class="ic-num">O3</div>
+      <div class="ic-title">CRED Score — Unified Layer</div>
+      <div class="ic-body">A single score reflecting payment discipline, health, and platform loyalty — unlocking tiered benefits. Creates real switching cost, solving P4 and P5.</div>
+    </div>
+    <div class="insight-card ic-green">
+      <div class="ic-num">O4</div>
+      <div class="ic-title">Social / Community Layer</div>
+      <div class="ic-body">Peer benchmarking and opt-in group challenges. Creates social loops that drive both retention (P2) and organic acquisition (P6).</div>
+    </div>
+    <div class="insight-card ic-gold">
+      <div class="ic-num">O5</div>
+      <div class="ic-title">Personalised Reward Engine</div>
+      <div class="ic-body">Use spend data to surface hyper-relevant rewards. Directly solves P1 and P3, and increases CRED Store GMV for the business.</div>
+    </div>
+    <div class="insight-card ic-gold">
+      <div class="ic-num">O6</div>
+      <div class="ic-title">Aspirational Waitlist</div>
+      <div class="ic-body">A score-to-unlock progress bar for sub-750 users. Creates an acquisition pipeline from aspirational members as their scores improve.</div>
+    </div>
+  </div>
+
+  <div class="footnote">† Pain points ranked by user frequency × business impact. Each opportunity maps directly to at least one pain point — P references shown in each card. These feed directly into the feature prioritization in Part II.</div>
+</div>
+</div>
+
+<!-- ═══════ PART II DIVIDER ═══════ -->
+<div id="features" class="part-divider">
+  <div class="pd-label">Part II — Product Strategy</div>
+  <div class="pd-num">II</div>
+  <div class="pd-title">Feature Ideation<br>&amp; <span class="gold">Prioritization</span></div>
+  <div class="pd-rule"></div>
+  <div class="pd-desc">10 feature candidates evaluated across 4 dimensions — converging on one highest-value bet.</div>
+</div>
+
+<!-- ═══════ FEATURE LONGLIST ═══════ -->
+<div class="section-wrap">
+  <div class="section-header-bar">
+    <div class="sh-left">
+      <div class="sh-label">Section 04 · Feature Ideation</div>
+      <div class="sh-title">10 Feature <span class="gold">Candidates</span></div>
+    </div>
+    <div class="sh-right">CRED PM Case Study · Aryan Singh</div>
+  </div>
+<!-- ============================
+     FEATURE LONGLIST
+     ============================ -->
+<div class="content-page">
+
+  <div class="sh-title">10 Feature <span class="gold">Candidates</span></div>
+    </div>
+    <div class="sh-right">CRED PM Case Study &nbsp;·&nbsp; Aryan Singh</div>
+  </div>
+
+  <div class="sec-desc">Each feature directly addresses one or more pain points (P1–P6) and is tagged by primary strategic goal. A mix of improvements to existing features and new additions.</div>
+
+  <div class="features-grid-2col">
+
+    <div class="feature-card fc-both">
+      <div class="fc-header">
+        <div class="fc-num-badge">F1</div>
+        <div class="fc-tag-group">
+          <span class="tag-sm tg-neutral">Both Goals</span>
+          <span class="tag-sm tg-pain">P1 · P3</span>
+        </div>
+      </div>
+      <div class="fc-name-text">CRED Money Lens</div>
+      <div class="fc-desc-text">An AI-powered weekly financial digest analysing all linked card transactions — surfacing spending insights, anomaly alerts, and credit health nudges. Turns CRED's untapped data into a personal CFO that users actively want to open mid-week.</div>
+    </div>
+
+    <div class="feature-card fc-eng">
+      <div class="fc-header">
+        <div class="fc-num-badge">F2</div>
+        <div class="fc-tag-group">
+          <span class="tag-sm tg-opp">Engagement</span>
+          <span class="tag-sm tg-pain">P1 · P2</span>
+        </div>
+      </div>
+      <div class="fc-name-text">Coin Goals</div>
+      <div class="fc-desc-text">Let users set aspirational coin redemption targets (a trip, a gadget, an experience) with animated progress tracking. Transforms passive coin accumulation into an emotionally-charged, goal-driven savings journey.</div>
+    </div>
+
+    <div class="feature-card fc-both">
+      <div class="fc-header">
+        <div class="fc-num-badge">F3</div>
+        <div class="fc-tag-group">
+          <span class="tag-sm tg-neutral">Both Goals</span>
+          <span class="tag-sm tg-pain">P4 · P5</span>
+        </div>
+      </div>
+      <div class="fc-name-text">CRED Score (Unified Reputation)</div>
+      <div class="fc-desc-text">A single platform score — combining payment discipline, spending health, and platform loyalty — that unlocks tiered benefits across all CRED features. Creates meaningful switching cost and unifies the product ecosystem.</div>
+    </div>
+
+    <div class="feature-card fc-acq">
+      <div class="fc-header">
+        <div class="fc-num-badge">F4</div>
+        <div class="fc-tag-group">
+          <span class="tag-sm tg-touch">Acquisition</span>
+          <span class="tag-sm tg-pain">P6</span>
+        </div>
+      </div>
+      <div class="fc-name-text">CRED Access Waitlist</div>
+      <div class="fc-desc-text">A score-to-unlock progress bar for users with 680–749 credit scores showing exactly what habits to build to gain entry — creating an aspirational funnel of future members while capturing pre-intent data.</div>
+    </div>
+
+    <div class="feature-card fc-eng">
+      <div class="fc-header">
+        <div class="fc-num-badge">F5</div>
+        <div class="fc-tag-group">
+          <span class="tag-sm tg-opp">Engagement</span>
+          <span class="tag-sm tg-pain">P1 · P3</span>
+        </div>
+      </div>
+      <div class="fc-name-text">Smart Rewards Engine</div>
+      <div class="fc-desc-text">Replaces the generic reward catalogue with a personalised feed driven by spend data — "You spent ₹14K on dining last month, here are 3 restaurant rewards you'd love." Relevant rewards feel like perks, not ads.</div>
+    </div>
+
+    <div class="feature-card fc-both">
+      <div class="fc-header">
+        <div class="fc-num-badge">F6</div>
+        <div class="fc-tag-group">
+          <span class="tag-sm tg-neutral">Both Goals</span>
+          <span class="tag-sm tg-pain">P2 · P6</span>
+        </div>
+      </div>
+      <div class="fc-name-text">CRED Circles (Social Layer)</div>
+      <div class="fc-desc-text">Anonymous peer benchmarking and opt-in group challenges ("This month's Dining Detox"). Members compare habits with similar-income peers, creating social accountability that drives weekly opens and referrals.</div>
+    </div>
+
+    <div class="feature-card fc-eng">
+      <div class="fc-header">
+        <div class="fc-num-badge">F7</div>
+        <div class="fc-tag-group">
+          <span class="tag-sm tg-opp">Engagement</span>
+          <span class="tag-sm tg-pain">P2 · P5</span>
+        </div>
+      </div>
+      <div class="fc-name-text">Credit Score Coach</div>
+      <div class="fc-desc-text">A step-by-step, action-oriented module telling users exactly what to do this week to improve their credit score — with impact predictions ("Paying this card early could add +12 points in 30 days").</div>
+    </div>
+
+    <div class="feature-card fc-acq">
+      <div class="fc-header">
+        <div class="fc-num-badge">F8</div>
+        <div class="fc-tag-group">
+          <span class="tag-sm tg-touch">Acquisition</span>
+          <span class="tag-sm tg-pain">P6</span>
+        </div>
+      </div>
+      <div class="fc-name-text">Milestone Referral Program</div>
+      <div class="fc-desc-text">Tiered referral rewards that unlock as both referrer and referee hit milestones (first payment, first redemption). Creates a shared journey narrative rather than a one-time coin payout — far higher conversion.</div>
+    </div>
+
+    <div class="feature-card fc-eng">
+      <div class="fc-header">
+        <div class="fc-num-badge">F9</div>
+        <div class="fc-tag-group">
+          <span class="tag-sm tg-opp">Engagement</span>
+          <span class="tag-sm tg-pain">P4 · P5</span>
+        </div>
+      </div>
+      <div class="fc-name-text">CRED Vault (Credit Line Manager)</div>
+      <div class="fc-desc-text">A unified view of available credit across all cards + CRED Cash, with intelligent suggestions on which credit to use for large purchases to maximise rewards, minimise interest, and protect credit score.</div>
+    </div>
+
+    <div class="feature-card fc-eng">
+      <div class="fc-header">
+        <div class="fc-num-badge">F10</div>
+        <div class="fc-tag-group">
+          <span class="tag-sm tg-opp">Engagement</span>
+          <span class="tag-sm tg-pain">P2 · P5</span>
+        </div>
+      </div>
+      <div class="fc-name-text">Annual CRED Wrapped</div>
+      <div class="fc-desc-text">Spotify Wrapped-style year-end personalised report — total spend, top categories, coins earned, credit score journey. Highly shareable, drives social media virality, and reinforces platform identity.</div>
+    </div>
+
+  </div>
+
+  <div class="footnote">† All 10 features mapped to P1–P6 pain points from the empathy map. Mix of improvements to existing features (F2, F5, F8) and new additions (F1, F3, F4, F6, F7, F9, F10).</div>
+</div>
+</div>
+
+<!-- ═══════ MATRIX + RANKING ═══════ -->
+<div class="section-wrap" style="padding-top:40px;">
+  <div class="section-header-bar">
+    <div class="sh-left">
+      <div class="sh-label">Section 05 · Prioritization</div>
+      <div class="sh-title">Value vs. Effort &amp; <span class="gold">Ranking</span></div>
+    </div>
+    <div class="sh-right">CRED PM Case Study · Aryan Singh</div>
+  </div>
+<!-- ============================
+     MATRIX + RANKING
+     ============================ -->
+<div class="content-page">
+
+  <div class="sh-title">Value vs. Effort &amp; <span class="gold">Ranking</span></div>
+    </div>
+    <div class="sh-right">CRED PM Case Study &nbsp;·&nbsp; Aryan Singh</div>
+  </div>
+
+  <!-- Quadrant Matrix -->
+  <div class="matrix-static mb16">
+    <div class="matrix-header">Value vs. Effort Matrix</div>
+    <div class="matrix-body">
+      <div class="quadrant-grid">
+        <div class="quad">
+          <div class="quad-title wins">▲ HIGH VALUE · LOW EFFORT — Quick Wins</div>
+          <span class="quad-feature qf-green">F2 Coin Goals</span>
+          <span class="quad-feature qf-green">F5 Smart Rewards</span>
+          <span class="quad-feature qf-green">F7 Credit Coach</span>
+          <span class="quad-feature qf-green">F4 Access Waitlist</span>
+        </div>
+        <div class="quad">
+          <div class="quad-title bets">▲ HIGH VALUE · HIGH EFFORT — Strategic Bets</div>
+          <span class="quad-feature qf-gold">F1 Money Lens ★</span>
+          <span class="quad-feature qf-gold">F3 CRED Score</span>
+          <span class="quad-feature qf-gold">F6 CRED Circles</span>
+        </div>
+        <div class="quad">
+          <div class="quad-title fills">▼ LOW VALUE · LOW EFFORT — Fill-ins</div>
+          <span class="quad-feature qf-grey">F8 Milestone Referral</span>
+          <span class="quad-feature qf-grey">F10 CRED Wrapped</span>
+        </div>
+        <div class="quad">
+          <div class="quad-title reconsider">▼ LOW VALUE · HIGH EFFORT — Reconsider</div>
+          <span class="quad-feature qf-red">F9 CRED Vault</span>
+        </div>
+      </div>
+      <div class="matrix-axis-labels">
+        <span>← Low Effort</span>
+        <span>High Effort →</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Ranking Table -->
+  <div class="sec-label">Prioritized Ranking — Scored Across 4 Dimensions (Max 40)</div>
+  <table class="rank-table">
+    <thead>
+      <tr>
+        <th style="width:38px">#</th>
+        <th>Feature</th>
+        <th style="width:80px">Acquisition</th>
+        <th style="width:80px">Engagement</th>
+        <th style="width:60px">Ease</th>
+        <th style="width:80px">Differentiation</th>
+        <th style="width:55px">Total</th>
+        <th style="width:80px">Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="winner">
+        <td><div class="rank-num-big">1</div></td>
+        <td>
+          <div class="rank-name">F1 — CRED Money Lens</div>
+          <div class="rank-sub">AI-powered weekly financial digest &amp; spending intelligence</div>
+          <div style="margin-top:5px">
+            <div class="score-bar-row"><span class="sb-label">Acquisition</span><div class="sb-track"><div class="sb-fill sb-acq" style="width:80%"></div></div><span style="font-size:11px;color:#888">8</span></div>
+            <div class="score-bar-row"><span class="sb-label">Engagement</span><div class="sb-track"><div class="sb-fill sb-eng" style="width:100%"></div></div><span style="font-size:11px;color:#888">10</span></div>
+            <div class="score-bar-row"><span class="sb-label">Ease</span><div class="sb-track"><div class="sb-fill sb-ease" style="width:60%"></div></div><span style="font-size:11px;color:#888">6</span></div>
+            <div class="score-bar-row"><span class="sb-label">Differentiation</span><div class="sb-track"><div class="sb-fill sb-diff" style="width:100%"></div></div><span style="font-size:11px;color:#888">10</span></div>
+          </div>
+        </td>
+        <td style="text-align:center;font-weight:700">8</td>
+        <td style="text-align:center;font-weight:700">10</td>
+        <td style="text-align:center;font-weight:700">6</td>
+        <td style="text-align:center;font-weight:700">10</td>
+        <td><div class="score-total">34</div></td>
+        <td><span class="badge-winner">Selected</span></td>
+      </tr>
+      <tr>
+        <td><div class="rank-num-big" style="opacity:0.35">2</div></td>
+        <td><div class="rank-name">F5 — Smart Rewards Engine</div><div class="rank-sub">Personalised reward feed powered by spend data</div></td>
+        <td style="text-align:center">6</td><td style="text-align:center">9</td><td style="text-align:center">7</td><td style="text-align:center">8</td>
+        <td style="font-size:18px;font-weight:700;color:#888">30</td>
+        <td><span class="badge-next">Next Sprint</span></td>
+      </tr>
+      <tr>
+        <td><div class="rank-num-big" style="opacity:0.35">3</div></td>
+        <td><div class="rank-name">F2 — Coin Goals</div><div class="rank-sub">Goal-based aspirational coin saving journeys</div></td>
+        <td style="text-align:center">5</td><td style="text-align:center">9</td><td style="text-align:center">9</td><td style="text-align:center">6</td>
+        <td style="font-size:18px;font-weight:700;color:#888">29</td>
+        <td><span class="badge-next">Next Sprint</span></td>
+      </tr>
+      <tr>
+        <td><div class="rank-num-big" style="opacity:0.35">4</div></td>
+        <td><div class="rank-name">F7 — Credit Score Coach</div><div class="rank-sub">Action-oriented weekly credit score improvement</div></td>
+        <td style="text-align:center">6</td><td style="text-align:center">8</td><td style="text-align:center">7</td><td style="text-align:center">7</td>
+        <td style="font-size:18px;font-weight:700;color:#888">28</td>
+        <td><span class="badge-later">Backlog</span></td>
+      </tr>
+      <tr>
+        <td><div class="rank-num-big" style="opacity:0.35">5</div></td>
+        <td><div class="rank-name">F3 — CRED Score</div><div class="rank-sub">Unified platform reputation score, tiered benefits</div></td>
+        <td style="text-align:center">7</td><td style="text-align:center">9</td><td style="text-align:center">2</td><td style="text-align:center">9</td>
+        <td style="font-size:18px;font-weight:700;color:#888">27</td>
+        <td><span class="badge-later">6–12 mo</span></td>
+      </tr>
+      <tr>
+        <td><div class="rank-num-big" style="opacity:0.25">6–10</div></td>
+        <td><div class="rank-name" style="color:#888">F4, F6, F8, F10, F9</div><div class="rank-sub">Access Waitlist · CRED Circles · Milestone Referral · Wrapped · Vault</div></td>
+        <td style="text-align:center;color:#aaa">—</td><td style="text-align:center;color:#aaa">—</td><td style="text-align:center;color:#aaa">—</td><td style="text-align:center;color:#aaa">—</td>
+        <td style="font-size:18px;font-weight:700;color:#ccc">17–26</td>
+        <td><span class="badge-later">Future</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Why F1 wins -->
+  <div class="winner-callout">
+    <div class="wc-label">Why F1 — CRED Money Lens is the Highest-Value Feature</div>
+    <div class="wc-title">The Only Feature That Solves Three Problems Simultaneously</div>
+    <div class="wc-body">It breaks the monthly-only loop (P2) by creating a weekly open reason. It monetises CRED's biggest competitive moat — transaction data (P3) — that no competitor can easily replicate. And it serves as the intelligent engine that makes every downstream feature — rewards personalisation, coin goals, credit coaching — dramatically better. No Indian fintech has done this well for the premium credit card segment.</div>
+    <table class="why-table">
+      <thead>
+        <tr><th>Dimension</th><th>Rationale</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Engagement</td><td>Creates a weekly habit loop — the single biggest structural gap in CRED today. Targets DAU/MAU improvement directly.</td></tr>
+        <tr><td>Acquisition</td><td>"Your personal CFO for free" is a far stronger referral hook than coin rewards and creates genuine word-of-mouth.</td></tr>
+        <tr><td>Differentiation</td><td>Fi, Jupiter, and Slice focus on neobanking. No one owns this for the credit card + premium segment in India.</td></tr>
+        <tr><td>Data Moat</td><td>CRED already has multi-card transaction data from 13M+ users. Competitors can't replicate this without years of trust-building.</td></tr>
+        <tr><td>Platform Enabler</td><td>Makes F2 Coin Goals, F5 Smart Rewards, and F7 Credit Coach all significantly more intelligent and personalised.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="footnote">† Scoring methodology: Acquisition Impact (0–10), Engagement Impact (0–10), Ease = inverse of effort (0–10), Strategic Differentiation (0–10). Total max = 40. Next steps: deep-dive PRD, UI wireframes, and metrics framework for F1.</div>
+</div>
+</div>
+
+<!-- ═══════ PART III DIVIDER ═══════ -->
+<div id="wireframes" class="part-divider">
+  <div class="pd-label">Part III — Feature Deep-Dive</div>
+  <div class="pd-num">III</div>
+  <div class="pd-title">Wireframes —<br><span class="gold">CRED Money Lens</span></div>
+  <div class="pd-rule"></div>
+  <div class="pd-desc">6 annotated mobile screens covering the full user flow — from push notification trigger to onboarding consent.</div>
+</div>
+
+<!-- ═══════ WIREFRAMES ═══════ -->
+<div class="wf-section">
+<div class="page-header">
+  <div class="ph-label">Feature Deep-Dive · CRED Money Lens</div>
+  <div class="ph-title">Wireframes — <span>6 Screens</span></div>
+  <div class="ph-sub">Lo-fi annotated mobile wireframes · PM Case Study · by Aryan Singh</div>
+</div>
+
+<!-- ASSUMPTIONS -->
+<div class="assumptions">
+  <div class="ass-item"><div class="ass-key">Entry Point</div>Home screen card → tap → full digest</div>
+  <div class="ass-item"><div class="ass-key">Tone</div>Observational, non-preachy. CRED brand voice.</div>
+  <div class="ass-item"><div class="ass-key">Coin Link</div>One earn nudge per digest, not the focus</div>
+  <div class="ass-item"><div class="ass-key">Trigger</div>Push notif (weeks 1–4) → passive home card habit</div>
+  <div class="ass-item"><div class="ass-key">Data Source</div>Linked card transactions (already available to CRED)</div>
+</div>
+
+<!-- FLOW -->
+<div style="padding:0 48px 8px">
+  <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin-bottom:10px">User Flow</div>
+  <div class="flow-arrow">
+    <span class="flow-chip">S1 · Notification</span>
+    <span class="flow-sep">→</span>
+    <span class="flow-chip">S2 · Home Card</span>
+    <span class="flow-sep">→</span>
+    <span class="flow-chip">S3 · Weekly Digest</span>
+    <span class="flow-sep">→</span>
+    <span class="flow-chip">S4 · Category Drilldown</span>
+    <span class="flow-sep">→</span>
+    <span class="flow-chip">S5 · Credit Health</span>
+    <span class="flow-sep">→</span>
+    <span class="flow-chip">S6 · Onboarding/Consent</span>
+  </div>
+</div>
+
+<div class="screens">
+
+  <!-- ===================== SCREEN 1: NOTIFICATION ===================== -->
+  <div class="screen-block">
+    <div class="phone-wrap">
+      <div class="screen-meta">
+        <div class="screen-num">01</div>
+        <div class="screen-title">Push Notification</div>
+        <div class="screen-desc">The weekly trigger. Appears every Monday morning. Drives the open.</div>
+      </div>
+      <div class="phone">
+        <div class="phone-notch">
+          <div class="notch-pill"></div>
+        </div>
+        <div style="background:#0d0d0d;padding:6px 14px 4px;">
+          <div class="status-bar"><span>9:07</span><span>▲▲▲ ◉ ▮▮</span></div>
+        </div>
+        <!-- Lock screen style -->
+        <div style="background:#111;min-height:520px;padding:16px 0;">
+          <div style="text-align:center;padding:20px 14px 24px;">
+            <div style="font-size:32px;margin-bottom:4px;">🔒</div>
+            <div style="font-size:11px;color:#888;font-family:'DM Mono',monospace;">Monday, 9 March</div>
+            <div style="font-size:28px;font-weight:300;color:#fff;margin-top:4px;">9:07</div>
+          </div>
+          <!-- Notification card -->
+          <div class="notif-banner">
+            <div class="notif-icon">📊</div>
+            <div class="notif-body">
+              <div class="notif-title">CRED · Money Lens</div>
+              Your week in money is ready. Dining led your spend at ₹6,240. One thing worth knowing.
+              <div class="notif-time">now</div>
+            </div>
+          </div>
+          <div style="padding:0 14px">
+            <!-- Second notif faded -->
+            <div style="background:#161616;border:1px solid #2a2a2a;border-radius:10px;padding:10px 12px;display:flex;gap:8px;opacity:0.4">
+              <div style="width:28px;height:28px;background:#222;border-radius:8px;flex-shrink:0;"></div>
+              <div style="font-size:8px;color:#666;">Gmail · 3 new messages</div>
+            </div>
+          </div>
+          <!-- Swipe hint -->
+          <div style="text-align:center;margin-top:32px;font-size:8px;color:#444;font-family:'DM Mono',monospace;letter-spacing:0.1em;">SWIPE UP TO OPEN</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="annotations">
+      <div class="ann-item">
+        <div class="ann-num">1</div>
+        <div class="ann-body">
+          <div class="ann-title">Timing: Monday 9am</div>
+          <div class="ann-text">Sent at the start of the working week when users are in a planning mindset — not Friday (end-of-week noise) or weekend (leisure mode). A/B test day vs. open rate.</div>
+        </div>
+      </div>
+      <div class="ann-item">
+        <div class="ann-num">2</div>
+        <div class="ann-body">
+          <div class="ann-title">Copy is observational, not alarming</div>
+          <div class="ann-text">"One thing worth knowing" — creates curiosity without anxiety. Consistent with CRED's dry, non-preachy tone. Never says "you overspent" in the notification itself.</div>
+        </div>
+      </div>
+      <div class="ann-item">
+        <div class="ann-num">3</div>
+        <div class="ann-body">
+          <div class="ann-title">Single top-line insight in preview</div>
+          <div class="ann-text">Shows the leading spend category upfront so there's a reason to tap. Generic "your report is ready" has ~3% CTR. Category-specific copy targets 12–18% CTR based on fintech benchmarks.</div>
+        </div>
+      </div>
+      <div class="ann-item">
+        <div class="ann-num">4</div>
+        <div class="ann-body">
+          <div class="ann-title">Frequency: weekly, not daily</div>
+          <div class="ann-text">Daily financial summaries cause notification fatigue and get muted. Weekly is high enough to build habit, low enough to stay welcome. User can adjust in settings.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== SCREEN 2: HOME CARD ===================== -->
+  <div class="screen-block reverse">
+    <div class="phone-wrap">
+      <div class="screen-meta" style="text-align:right">
+        <div class="screen-num">02</div>
+        <div class="screen-title">Home Screen Card</div>
+        <div class="screen-desc">Money Lens lives as a persistent home card between bill cycles.</div>
+      </div>
+      <div class="phone">
+        <div class="phone-notch"><div class="notch-pill"></div></div>
+        <div style="background:#0d0d0d;padding:6px 14px 0;"><div class="status-bar"><span>9:08</span><span>▲▲▲ ◉ ▮▮</span></div></div>
+        <div class="cred-topbar">
+          <div class="cred-logo">CRED</div>
+          <div style="display:flex;gap:8px;align-items:center;">
+            <div class="cred-coins-chip">2,04,834 ⬡</div>
+            <div class="cred-avatar">A</div>
+          </div>
+        </div>
+        <div class="phone-screen">
+          <div class="screen-pad">
+            <!-- Welcome -->
+            <div style="margin-bottom:12px;">
+              <div style="font-size:13px;font-weight:600;color:var(--wf-text);">welcome, Aryan</div>
+              <div style="font-size:8px;color:var(--wf-muted);">explore and claim</div>
+            </div>
+
+            <!-- Bill due card -->
+            <div class="wf-card" style="border-left:2px solid #c94c4c;">
+              <div class="wf-row">
+                <div>
+                  <div class="wf-card-title">HDFC Regalia</div>
+                  <div class="wf-card-sub">Due in 4 days</div>
+                </div>
+                <div style="text-align:right;">
+                  <div class="wf-num-sm">₹18,420</div>
+                  <div class="wf-btn" style="width:auto;padding:4px 10px;font-size:8px;border-radius:6px;display:inline-block;margin-top:3px;">Pay Now</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- MONEY LENS CARD — the new element -->
+            <div class="wf-highlight-card">
+              <div class="wf-row">
+                <div>
+                  <div style="font-size:8px;font-family:'DM Mono',monospace;letter-spacing:0.12em;text-transform:uppercase;color:var(--wf-accent);margin-bottom:3px;">Money Lens · This Week</div>
+                  <div style="font-size:11px;font-weight:600;color:var(--wf-text);">You spent ₹24,680</div>
+                  <div style="font-size:8px;color:var(--wf-muted);margin-top:2px;">across 3 cards · 28 transactions</div>
+                </div>
+                <div style="text-align:right;">
+                  <div style="font-size:8px;color:var(--wf-muted);">vs last week</div>
+                  <div style="font-size:11px;color:#cc8080;font-family:'DM Mono',monospace;">↑ 12%</div>
+                </div>
+              </div>
+              <div class="wf-divider"></div>
+              <!-- Mini bars -->
+              <div class="wf-bar-row">
+                <div class="wf-bar-label">Dining</div>
+                <div class="wf-bar-track"><div class="wf-bar-fill" style="width:72%"></div></div>
+                <div class="wf-bar-val">₹6,240</div>
+              </div>
+              <div class="wf-bar-row">
+                <div class="wf-bar-label">Shopping</div>
+                <div class="wf-bar-track"><div class="wf-bar-fill" style="width:48%"></div></div>
+                <div class="wf-bar-val">₹4,100</div>
+              </div>
+              <div class="wf-bar-row">
+                <div class="wf-bar-label">Travel</div>
+                <div class="wf-bar-track"><div class="wf-bar-fill" style="width:32%"></div></div>
+                <div class="wf-bar-val">₹2,800</div>
+              </div>
+              <div style="font-size:8px;color:var(--wf-accent);margin-top:8px;text-align:right;font-family:'DM Mono',monospace;">View full digest →</div>
+            </div>
+
+            <!-- Coins nudge small -->
+            <div class="wf-card" style="display:flex;gap:8px;align-items:center;">
+              <div style="font-size:16px;">⬡</div>
+              <div>
+                <div class="wf-card-title" style="font-size:9px;">Pay HDFC 3 days early → earn 2,400 coins</div>
+                <div class="wf-card-sub">Timely payment bonus active</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="wf-bottom-nav">
+            <div class="wf-nav-item"><div class="wf-nav-icon active"></div><div class="wf-nav-label active">home</div></div>
+            <div class="wf-nav-item"><div class="wf-nav-icon"></div><div class="wf-nav-label">cards</div></div>
+            <div class="wf-nav-item"><div class="wf-nav-icon"></div><div class="wf-nav-label">rewards</div></div>
+            <div class="wf-nav-item"><div class="wf-nav-icon"></div><div class="wf-nav-label">more</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="annotations">
+      <div class="ann-item">
+        <div class="ann-num">1</div>
+        <div class="ann-body">
+          <div class="ann-title">Money Lens card sits below bill due</div>
+          <div class="ann-text">Bill payment remains the #1 action — Money Lens never competes with it. Card hierarchy: Bill → Lens → Coins. Users get value even if they don't tap through.</div>
+        </div>
+      </div>
+      <div class="ann-item">
+        <div class="ann-num">2</div>
+        <div class="ann-body">
+          <div class="ann-title">3 data points visible without tapping</div>
+          <div class="ann-text">Total spend, week-on-week delta, and top 3 categories are visible inline. Most users will glance and leave — that glance itself is an engagement event worth tracking (impressions vs. taps).</div>
+        </div>
+      </div>
+      <div class="ann-item">
+        <div class="ann-num">3</div>
+        <div class="ann-body">
+          <div class="ann-title">Coin nudge is separate, not inside Lens</div>
+          <div class="ann-text">Keeping the coin earn nudge as its own card below preserves Money Lens as a pure intelligence layer. Mixing coins into the digest would dilute the "financial clarity" positioning.</div>
+        </div>
+      </div>
+      <div class="ann-item">
+        <div class="ann-num">4</div>
+        <div class="ann-body">
+          <div class="ann-title">Gold border distinguishes Lens from standard cards</div>
+          <div class="ann-text">The gold gradient border signals "this is a premium CRED-native feature" — not a third-party offer. Trains users to recognise Money Lens as a distinctive element over time.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== SCREEN 3: WEEKLY DIGEST ===================== -->
+  <div class="screen-block">
+    <div class="phone-wrap">
+      <div class="screen-meta">
+        <div class="screen-num">03</div>
+        <div class="screen-title">Weekly Digest</div>
+        <div class="screen-desc">The core Money Lens experience. Full spend breakdown with one key insight.</div>
+      </div>
+      <div class="phone">
+        <div class="phone-notch"><div class="notch-pill"></div></div>
+        <div style="background:#0d0d0d;padding:6px 14px 0;"><div class="status-bar"><span>9:09</span><span>▲▲▲ ◉ ▮▮</span></div></div>
+        <div class="phone-screen">
+          <!-- Header -->
+          <div style="background:#111;padding:10px 14px 12px;">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+              <div style="font-size:11px;color:#666;">←</div>
+              <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--wf-accent);">Money Lens</div>
+            </div>
+            <div style="font-size:14px;font-weight:700;color:var(--wf-text);">Week of 3–9 March</div>
+            <div style="font-size:8px;color:var(--wf-muted);margin-top:2px;">3 cards · 28 transactions</div>
+          </div>
+
+          <div class="screen-pad" style="overflow-y:auto;">
+            <!-- Total spend hero -->
+            <div style="text-align:center;padding:14px 0 10px;">
+              <div style="font-size:8px;font-family:'DM Mono',monospace;letter-spacing:0.12em;text-transform:uppercase;color:var(--wf-muted);margin-bottom:4px;">Total Spend</div>
+              <div style="font-family:'DM Mono',monospace;font-size:28px;font-weight:700;color:var(--wf-text);">₹24,680</div>
+              <div style="display:inline-flex;align-items:center;gap:4px;background:#2a1a1a;border:1px solid #4a2a2a;border-radius:12px;padding:2px 8px;margin-top:5px;">
+                <span style="font-size:8px;color:#cc8080;">↑ 12% vs last week</span>
+              </div>
+            </div>
+
+            <!-- Category breakdown -->
+            <div class="wf-section-label">Spend by Category</div>
+            <div class="wf-card">
+              <div class="wf-bar-row" style="margin-bottom:8px;">
+                <div class="wf-bar-label">Dining</div>
+                <div class="wf-bar-track"><div class="wf-bar-fill" style="width:72%"></div></div>
+                <div class="wf-bar-val">₹6,240</div>
+              </div>
+              <div class="wf-bar-row" style="margin-bottom:8px;">
+                <div class="wf-bar-label">Shopping</div>
+                <div class="wf-bar-track"><div class="wf-bar-fill" style="width:48%;background:#6a8abb;"></div></div>
+                <div class="wf-bar-val">₹4,100</div>
+              </div>
+              <div class="wf-bar-row" style="margin-bottom:8px;">
+                <div class="wf-bar-label">Travel</div>
+                <div class="wf-bar-track"><div class="wf-bar-fill" style="width:32%;background:#7aaa8a;"></div></div>
+                <div class="wf-bar-val">₹2,800</div>
+              </div>
+              <div class="wf-bar-row" style="margin-bottom:8px;">
+                <div class="wf-bar-label">Fuel</div>
+                <div class="wf-bar-track"><div class="wf-bar-fill" style="width:22%;background:#aa8a6a;"></div></div>
+                <div class="wf-bar-val">₹1,900</div>
+              </div>
+              <div class="wf-bar-row">
+                <div class="wf-bar-label">Other</div>
+                <div class="wf-bar-track"><div class="wf-bar-fill" style="width:38%;background:#555;"></div></div>
+                <div class="wf-bar-val">₹9,640</div>
+              </div>
+            </div>
+
+            <!-- Key Insight — the "one thing worth knowing" -->
+            <div class="wf-section-label">This Week's Insight</div>
+            <div class="wf-highlight-card">
+              <div style="font-size:8px;font-family:'DM Mono',monospace;letter-spacing:0.1em;text-transform:uppercase;color:var(--wf-accent);margin-bottom:5px;">📊 Dining</div>
+              <div style="font-size:10.5px;color:var(--wf-text);line-height:1.5;margin-bottom:6px;">Dining was 34% of your total spend — up from 21% last month. Usual for you in March.</div>
+              <div style="display:flex;gap:5px;">
+                <span class="wf-tag tag-gold">34% of spend</span>
+                <span class="wf-tag tag-red">↑ vs last month</span>
+              </div>
+            </div>
+
+            <!-- Tap to drill down -->
+            <button class="wf-btn-ghost">Explore all categories →</button>
+          </div>
+
+          <div class="wf-bottom-nav">
+            <div class="wf-nav-item"><div class="wf-nav-icon"></div><div class="wf-nav-label">home</div></div>
+            <div class="wf-nav-item"><div class="wf-nav-icon"></div><div class="wf-nav-label">cards</div></div>
+            <div class="wf-nav-item"><div class="wf-nav-icon"></div><div class="wf-nav-label">rewards</div></div>
+            <div class="wf-nav-item"><div class="wf-nav-icon"></div><div class="wf-nav-label">more</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="annotations">
+      <div class="ann-item">
+        <div class="ann-num">1</div>
+        <div class="ann-body">
+          <div class="ann-title">One insight, not five</div>
+          <div class="ann-text">The "This Week's Insight" block surfaces exactly one observation. Multiple insights = cognitive overload = users stop reading. The insight is generated by ML (highest delta vs. prior 4-week average).</div>
+        </div>
+      </div>
+      <div class="ann-item">
+        <div class="ann-num">2</div>
+        <div class="ann-body">
+          <div class="ann-title">"Usual for you in March" — contextual normalisation</div>
+          <div class="ann-text">This phrase is key. It validates the user's behaviour without judging it. March = end of year outings, so dining spikes. The system knows this from prior-year data and says so. Non-preachy by design.</div>
+        </div>
+      </div>
+      <div class="ann-item">
+        <div class="ann-num">3</div>
+        <div class="ann-body">
+          <div class="ann-title">Categories are tappable for drill-down</div>
+          <div class="ann-text">Each bar row is a tap target leading to Screen 4 (Category Drilldown). The CTA button below is a secondary path for users who want to explore without having a specific category in mind.</div>
+        </div>
+      </div>
+      <div class="ann-item">
+        <div class="ann-num">4</div>
+        <div class="ann-body">
+          <div class="ann-title">No ₹ advice, no budgets</div>
+          <div class="ann-text">Notice there's no "Set a budget for Dining" prompt here. Budgeting apps have failed in India because they feel restrictive. Money Lens is observational first — budgeting is an optional next step, not the default.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== SCREEN 4: CATEGORY DRILLDOWN ===================== -->
+  <div class="screen-block reverse">
+    <div class="phone-wrap">
+      <div class="screen-meta" style="text-align:right">
+        <div class="screen-num">04</div>
+        <div class="screen-title">Category Drilldown</div>
+        <div class="screen-desc">Deep dive into a single spend category with transaction list and smart alert.</div>
+      </div>
+      <div class="phone">
+        <div class="phone-notch"><div class="notch-pill"></div></div>
+        <div style="background:#0d0d0d;padding:6px 14px 0;"><div class="status-bar"><span>9:11</span><span>▲▲▲ ◉ ▮▮</span></div></div>
+        <div class="phone-screen">
+          <div style="background:#111;padding:10px 14px 12px;">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+              <div style="font-size:11px;color:#666;">←</div>
+              <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--wf-accent);">Dining · March</div>
+            </div>
+            <div class="wf-row">
+              <div>
+                <div style="font-size:20px;font-weight:700;color:var(--wf-text);font-family:'DM Mono',monospace;">₹6,240</div>
+                <div style="font-size:8px;color:var(--wf-muted);">9 transactions this week</div>
+              </div>
+              <div style="text-align:right;">
+                <span class="wf-tag tag-red">↑ 61% vs Feb</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="screen-pad">
+            <!-- Smart Alert -->
+            <div class="insight-pill" style="border-color:#4a2a2a;background:#1a1010;">
+              <div class="ip-icon">⚡</div>
+              <div class="ip-text"><strong>Anomaly detected.</strong> You visited Swiggy 5 times this week vs. your usual 2. ₹2,100 of dining spend is delivery-only.</div>
+            </div>
+
+            <!-- Trend mini chart placeholder -->
+            <div class="wf-section-label">4-Week Trend</div>
+            <div class="wf-card" style="padding:10px 12px;">
+              <div style="display:flex;align-items:flex-end;gap:5px;height:40px;justify-content:space-around;">
+                <div style="display:flex;flex-direction:column;align-items:center;gap:2px;">
+                  <div style="width:28px;background:#3a3a3a;border-radius:3px 3px 0 0;height:18px;"></div>
+                  <div style="font-size:6.5px;color:var(--wf-muted);font-family:'DM Mono',monospace;">Dec</div>
+                </div>
+                <div style="display:flex;flex-direction:column;align-items:center;gap:2px;">
+                  <div style="width:28px;background:#3a3a3a;border-radius:3px 3px 0 0;height:22px;"></div>
+                  <div style="font-size:6.5px;color:var(--wf-muted);font-family:'DM Mono',monospace;">Jan</div>
+                </div>
+                <div style="display:flex;flex-direction:column;align-items:center;gap:2px;">
+                  <div style="width:28px;background:#3a3a3a;border-radius:3px 3px 0 0;height:16px;"></div>
+                  <div style="font-size:6.5px;color:var(--wf-muted);font-family:'DM Mono',monospace;">Feb</div>
+                </div>
+                <div style="display:flex;flex-direction:column;align-items:center;gap:2px;">
+                  <div style="width:28px;background:var(--wf-accent);border-radius:3px 3px 0 0;height:36px;"></div>
+                  <div style="font-size:6.5px;color:var(--wf-accent);font-family:'DM Mono',monospace;">Mar</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Transaction list -->
+            <div class="wf-section-label">Transactions</div>
+            <div class="wf-card" style="padding:0;">
+              <div style="padding:8px 12px;border-bottom:1px solid #2a2a2a;display:flex;justify-content:space-between;align-items:center;">
+                <div><div style="font-size:9px;font-weight:600;color:var(--wf-text);">Swiggy</div><div style="font-size:7.5px;color:var(--wf-muted);">7 Mar · HDFC</div></div>
+                <div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--wf-text);">₹842</div>
+              </div>
+              <div style="padding:8px 12px;border-bottom:1px solid #2a2a2a;display:flex;justify-content:space-between;align-items:center;">
+                <div><div style="font-size:9px;font-weight:600;color:var(--wf-text);">Taj Banjara</div><div style="font-size:7.5px;color:var(--wf-muted);">6 Mar · Axis</div></div>
+                <div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--wf-text);">₹2,100</div>
+              </div>
+              <div style="padding:8px 12px;display:flex;justify-content:space-between;align-items:center;">
+                <div><div style="font-size:9px;font-weight:600;color:var(--wf-text);">Zomato</div><div style="font-size:7.5px;color:var(--wf-muted);">5 Mar · HDFC</div></div>
+                <div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--wf-text);">₹560</div>
+              </div>
+            </div>
+            <div style="font-size:8px;color:var(--wf-accent);text-align:center;margin-top:6px;font-family:'DM Mono',monospace;">View all 9 transactions</div>
+          </div>
+
+          <div class="wf-bottom-nav">
+            <div class="wf-nav-item"><div class="wf-nav-icon"></div><div class="wf-nav-label">home</div></div>
+            <div class="wf-nav-item"><div class="wf-nav-icon"></div><div class="wf-nav-label">cards</div></div>
+            <div class="wf-nav-item"><div class="wf-nav-icon"></div><div class="wf-nav-label">rewards</div></div>
+            <div class="wf-nav-item"><div class="wf-nav-icon"></div><div class="wf-nav-label">more</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="annotations">
+      <div class="ann-item">
+        <div class="ann-num">1</div>
+        <div class="ann-body">
+          <div class="ann-title">Smart Alert — anomaly, not judgement</div>
+          <div class="ann-text">"Anomaly detected: 5 Swiggy visits vs usual 2." This is a factual observation, not "you're addicted to delivery." The alert fires only when behaviour deviates significantly from the user's own baseline — not a generic threshold.</div>
+        </div>
+      </div>
+      <div class="ann-item">
+        <div class="ann-num">2</div>
+        <div class="ann-body">
+          <div class="ann-title">4-week trend bar chart</div>
+          <div class="ann-text">Shows the user's own history, not benchmarks. Comparing to "similar users" can feel judgemental. Self-comparison is neutral and actionable. Current week highlighted in gold.</div>
+        </div>
+      </div>
+      <div class="ann-item">
+        <div class="ann-num">3</div>
+        <div class="ann-body">
+          <div class="ann-title">Transaction-level visibility</div>
+          <div class="ann-text">CRED already has this data from linked card statements. Surfacing it per-category requires categorisation ML (merchant name → category). This is the core data infrastructure investment needed.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== SCREEN 5: CREDIT HEALTH ===================== -->
+  <div class="screen-block">
+    <div class="phone-wrap">
+      <div class="screen-meta">
+        <div class="screen-num">05</div>
+        <div class="screen-title">Credit Health Tab</div>
+        <div class="screen-desc">Actionable credit score coaching — weekly tips with predicted impact.</div>
+      </div>
+      <div class="phone">
+        <div class="phone-notch"><div class="notch-pill"></div></div>
+        <div style="background:#0d0d0d;padding:6px 14px 0;"><div class="status-bar"><span>9:13</span><span>▲▲▲ ◉ ▮▮</span></div></div>
+        <div class="phone-screen">
+          <div style="background:#111;padding:10px 14px 12px;">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+              <div style="font-size:11px;color:#666;">←</div>
+              <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--wf-accent);">Credit Health</div>
+            </div>
+          </div>
+
+          <div class="screen-pad">
+            <!-- Score + ring -->
+            <div style="display:flex;align-items:center;gap:16px;margin-bottom:14px;">
+              <div class="score-ring">
+                <div class="ring-num">784</div>
+                <div class="ring-label">CIBIL</div>
+              </div>
+              <div>
+                <div style="font-size:11px;font-weight:600;color:var(--wf-text);">Good Standing</div>
+                <div style="font-size:8px;color:var(--wf-muted);margin-top:2px;">Updated 2 days ago</div>
+                <div style="display:flex;align-items:center;gap:4px;margin-top:5px;">
+                  <span style="font-size:8px;color:#6dcc90;font-family:'DM Mono',monospace;">↑ +8 pts</span>
+                  <span style="font-size:7.5px;color:var(--wf-muted);">last 30 days</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Score trend -->
+            <div class="wf-card" style="padding:10px 12px;">
+              <div style="font-size:8px;color:var(--wf-muted);margin-bottom:6px;">Score trend · 6 months</div>
+              <div style="display:flex;align-items:flex-end;gap:4px;height:32px;">
+                <div style="flex:1;background:#2a3a2a;border-radius:2px 2px 0 0;height:60%"></div>
+                <div style="flex:1;background:#2a3a2a;border-radius:2px 2px 0 0;height:70%"></div>
+                <div style="flex:1;background:#2a3a2a;border-radius:2px 2px 0 0;height:65%"></div>
+                <div style="flex:1;background:#2a3a2a;border-radius:2px 2px 0 0;height:75%"></div>
+                <div style="flex:1;background:#2a3a2a;border-radius:2px 2px 0 0;height:80%"></div>
+                <div style="flex:1;background:var(--wf-green);border-radius:2px 2px 0 0;height:90%"></div>
+              </div>
+            </div>
+
+            <!-- This week's actions -->
+            <div class="wf-section-label">Do This Week · +score impact</div>
+
+            <div class="insight-pill">
+              <div class="ip-icon">💳</div>
+              <div class="ip-text"><strong>Pay HDFC bill by Mar 11.</strong> On-time payment = estimated <strong style="color:#6dcc90;">+6 pts</strong> in 30 days.</div>
+            </div>
+            <div class="insight-pill">
+              <div class="ip-icon">📉</div>
+              <div class="ip-text"><strong>Utilisation at 67% on Axis card.</strong> Keeping it under 30% could add <strong style="color:#6dcc90;">+12 pts</strong>. Pay ₹8,400 to cross threshold.</div>
+            </div>
+            <div class="insight-pill">
+              <div class="ip-icon">🔍</div>
+              <div class="ip-text"><strong>2 hard inquiries this month.</strong> Avoid new credit applications for 45 days to prevent further score dip.</div>
+            </div>
+
+            <button class="wf-btn-ghost" style="margin-top:8px;">Full credit report →</button>
+          </div>
+
+          <div class="wf-bottom-nav">
+            <div class="wf-nav-item"><div class="wf-nav-icon"></div><div class="wf-nav-label">home</div></div>
+            <div class="wf-nav-item"><div class="wf-nav-icon"></div><div class="wf-nav-label">cards</div></div>
+            <div class="wf-nav-item"><div class="wf-nav-icon"></div><div class="wf-nav-label">rewards</div></div>
+            <div class="wf-nav-item"><div class="wf-nav-icon"></div><div class="wf-nav-label">more</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="annotations">
+      <div class="ann-item">
+        <div class="ann-num">1</div>
+        <div class="ann-body">
+          <div class="ann-title">Score + predicted point impact</div>
+          <div class="ann-text">"Pay HDFC bill = +6 pts in 30 days" is the key differentiator vs. every other credit score app. Showing predicted impact converts a passive score viewer into an active improver. CRED already knows the bill due date — this is a cheap inference.</div>
+        </div>
+      </div>
+      <div class="ann-item">
+        <div class="ann-num">2</div>
+        <div class="ann-body">
+          <div class="ann-title">3 actions max per week</div>
+          <div class="ann-text">More than 3 weekly actions causes decision paralysis and none get done. The system prioritises by point impact × ease of action. User can expand to see all factors but default is 3.</div>
+        </div>
+      </div>
+      <div class="ann-item">
+        <div class="ann-num">3</div>
+        <div class="ann-body">
+          <div class="ann-title">Utilisation threshold — specific number</div>
+          <div class="ann-text">"Pay ₹8,400 to cross 30% threshold" is far more actionable than "reduce your utilisation." CRED knows the card limit and current balance — this calculation is trivial but transformative from a UX standpoint.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== SCREEN 6: ONBOARDING / CONSENT ===================== -->
+  <div class="screen-block reverse">
+    <div class="phone-wrap">
+      <div class="screen-meta" style="text-align:right">
+        <div class="screen-num">06</div>
+        <div class="screen-title">Onboarding & Consent</div>
+        <div class="screen-desc">First-time activation screen. Trust-first, transparent data permission.</div>
+      </div>
+      <div class="phone">
+        <div class="phone-notch"><div class="notch-pill"></div></div>
+        <div style="background:#0d0d0d;padding:6px 14px 0;"><div class="status-bar"><span>9:05</span><span>▲▲▲ ◉ ▮▮</span></div></div>
+        <div class="phone-screen">
+          <div style="background:#111;padding:10px 14px;">
+            <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--wf-accent);'>">New for you</div>
+          </div>
+
+          <div class="screen-pad" style="text-align:center;padding-top:20px;">
+            <div class="step-row">
+              <div class="step-dot active"></div>
+              <div class="step-dot active"></div>
+              <div class="step-dot"></div>
+            </div>
+
+            <div class="perm-icon">📊</div>
+            <div style="font-size:14px;font-weight:700;color:var(--wf-text);margin-bottom:6px;">Meet Money Lens</div>
+            <div style="font-size:9px;color:var(--wf-muted);line-height:1.6;margin-bottom:18px;text-align:left;">Your weekly financial digest. Built from your card transactions. No bank login needed — we already have what we need.</div>
+
+            <!-- What we use -->
+            <div style="text-align:left;">
+              <div class="wf-section-label">What Money Lens reads</div>
+              <div class="wf-card">
+                <div class="perm-list-item"><span class="perm-check">✓</span><span>Your linked credit card transactions (already connected)</span></div>
+                <div class="perm-list-item"><span class="perm-check">✓</span><span>Merchant names and amounts (for category tagging)</span></div>
+                <div class="perm-list-item"><span class="perm-check">✓</span><span>Bill due dates and payment history</span></div>
+              </div>
+
+              <div class="wf-section-label">What we never do</div>
+              <div class="wf-card">
+                <div class="perm-list-item"><span style="color:#cc8080;font-size:10px;margin-top:1px;">✗</span><span>Share your data with brands or partners</span></div>
+                <div class="perm-list-item"><span style="color:#cc8080;font-size:10px;margin-top:1px;">✗</span><span>Use transaction data for ad targeting</span></div>
+                <div class="perm-list-item"><span style="color:#cc8080;font-size:10px;margin-top:1px;">✗</span><span>Show your data to other CRED members</span></div>
+              </div>
+            </div>
+
+            <button class="wf-btn">Turn on Money Lens</button>
+            <div style="font-size:8px;color:var(--wf-muted);margin-top:8px;">You can turn this off anytime in Settings</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="annotations">
+      <div class="ann-item">
+        <div class="ann-num">1</div>
+        <div class="ann-body">
+          <div class="ann-title">Consent is explicit and earned, not buried</div>
+          <div class="ann-text">Unlike most apps that hide data usage in a ToS link, this screen leads with it. For CRED's high-income user base, trust is a more important conversion lever than feature excitement. Transparency increases opt-in rate.</div>
+        </div>
+      </div>
+      <div class="ann-item">
+        <div class="ann-num">2</div>
+        <div class="ann-body">
+          <div class="ann-title">"No bank login needed" removes the biggest barrier</div>
+          <div class="ann-text">The #1 reason users don't connect financial apps is fear of sharing banking credentials. CRED already has card transaction data — this screen explicitly says so, removing a concern that doesn't even exist.</div>
+        </div>
+      </div>
+      <div class="ann-item">
+        <div class="ann-num">3</div>
+        <div class="ann-body">
+          <div class="ann-title">"Never" list is as important as the "reads" list</div>
+          <div class="ann-text">Stating what CRED won't do with the data is more reassuring than listing what it will do. The 3 "never" items directly address the fears CRED's premium user base would have — ad targeting, data sharing, social exposure.</div>
+        </div>
+      </div>
+      <div class="ann-item">
+        <div class="ann-num">4</div>
+        <div class="ann-body">
+          <div class="ann-title">Reversible — "turn off anytime"</div>
+          <div class="ann-text">Lowering the perceived commitment increases opt-in. Users who know they can undo an action are 40–60% more likely to proceed (loss aversion works both ways). This one line meaningfully improves activation rate.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end screens -->
+</div>
+
+</body>
+</html>
